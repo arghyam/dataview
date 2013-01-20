@@ -22,21 +22,6 @@ def favicon():
 def index():
     return render_template('home.html')
 
-@app.route('/upload', methods=['GET', 'POST'])
-def upload():
-    return render_template('upload.html', title="Upload",Caption="Upload a new data set",notes="Upload a new data set")
-
-@app.route('/data_source/create', methods=['GET', 'POST'])
-def createDataSource():
-    return render_template('create_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
-
-@app.route('/data_source/view_all', methods=['GET'])
-def viewAllDataSource():
-    return render_template('view_all_data_source.html',title="Data Source",caption="View All",notes="All the Data Sources created by you.")
-
-@app.route('/data_source/view/<data_source_id>', methods=['GET'])
-def viewDataSource(data_source_id):
-    return render_template('view_data_source.html',title="Data Source",caption="View",notes="You can add data tables to this source or edit the information related to this source.")
 
 @app.route('/create/data_table/', methods=['GET', 'POST'])
 def uploadDataTable():
@@ -116,11 +101,48 @@ def validateDataTable(data_table_id):
 
                 return render_template('validate_data_table.html', title="Validation",Caption="Upload a new data set",notes="Select the validation format for each column. This is used for validating the csv columns uploaded by you.",columns=columns,column_list=column_list, data_table=data_table)
             else:
-                #send error message
+                #validate
+                #1a: if everything is okay then add columns
+                
+                #1b: if not okay then show errors
+
+                #2a: create a table equal to values_data_table_<data_table_id> depending on columns
+
+                #2b: insert csv into that table
+
+                #3a: commit everything
+
+                #4: Forward to explore data_table
                 print "Its complete"
 
+@app.route('/view/data_table/<data_table_id>', methods=['GET'])
+def viewDataTable():
+    #1. get data_table
+    #2. get data_source
+    #3. get data_columns
+    #4. get the excel data
+    return render_template('view_data_table.html')
 
+@app.route('/create/data_source', methods=['GET', 'POST'])
+def createDataSource():
+    #for adding new data source
+    return render_template('create_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
 
-@app.route('/data_table/create', methods=['GET', 'POST'])
-def createDataTable():
-    return render_template('create_data_table.html')
+@app.route('/update/data_source', methods=['GET', 'POST'])
+def updateDataSource():
+    #update the details of data source
+    return render_template('update_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
+
+@app.route('/view/data_source/<data_source_id>', methods=['GET'])
+def viewDataSource(data_source_id):
+    #view a single data source details
+    #also display the data_tables under this source with column details and not the actual data
+    #button to add a new table
+    return render_template('view_data_source.html',title="Data Source",caption="View",notes="You can add data tables to this source or edit the information related to this source.")
+
+@app.route('/list/data_source/', methods=['GET'])
+def listAllDataSource():
+    #list all the data sources
+    #button to browse the single data source
+    #button to add a new data source
+    return render_template('list_all_data_source.html',title="Data Sources",caption="All your data sources.",notes="Upload a new data table either by creating a new data source or by adding to an existing data source")
