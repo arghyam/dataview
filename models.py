@@ -12,6 +12,10 @@ class PRIVACY:
     PUBLIC = 0
     PRIVATE = 1
 
+
+class UPLOAD_STATUS:
+    INCOMPLETE = 0
+    COMPLETE = 1
 # --- Models ------------------------------------------------------------------
 
 class Users(db.Model):
@@ -41,11 +45,12 @@ class DataTable(db.Model):
     data_table_description          = db.Column(db.Text, default=u'', nullable=False)
     data_table_privacy              = db.Column(db.Integer,  default=PRIVACY.PUBLIC, nullable=False)
     data_table_data_source_id       = db.Column(db.Integer, db.ForeignKey('data_source.data_source_id'), nullable=False)
+    data_table_upload_complete      = db.Column(db.Integer,  default=UPLOAD_STATUS.INCOMPLETE, nullable=False)
 
 
 class DataColumn(db.Model):
     __tablename__ = 'data_column'
     data_column_id                   = db.Column(db.Integer, primary_key=True)        
-    data_column_name                     = db.Column(db.Unicode(500))
-    data_column_short_name                 = db.Column(db.Unicode(500))
-    data_column_data_table_id             = db.Column(db.Integer, db.ForeignKey('data_table.data_table_id'), nullable=False)    
+    data_column_name                 = db.Column(db.Unicode(500))
+    data_column_short_name           = db.Column(db.Unicode(500))
+    data_column_data_table_id        = db.Column(db.Integer, db.ForeignKey('data_table.data_table_id'), nullable=False)    

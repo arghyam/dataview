@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="span6">
+   <form class="form-horizontal" name="upload_data_table_form" method="post">
+    <legend>Validate {{ name }} columns  </legend>
+    <div class="control-group">
+     <label class="control-label" for="name">Name</label>
+     <div class="controls">
+    <input type="text" id="name" name="name" value="{{ name }}" placeholder="Name of the data set"/>
+     </div>
+    </div>
+     
+    <div class="control-group">
+     <label class="control-label" for="description">Description</label>
+     <div class="controls">
+    <textarea rows="3" id="description" name="description">{{ description }}</textarea>
+     </div>
+    </div>
+
+    <div class="control-group">
+        <table class="table table-bordered">
+          <caption>Validate the columns</caption>
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Column Name</th>
+              <th>Validation Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for col in column_list %}
+                <tr>
+                    <td>
+                     {{ col }}
+                    </td>
+                    <td>
+                     {{ columns[col] }}
+                    </td> 
+                    <td>
+                        Validate
+                    </td>          
+                </tr>     
+            {% endfor %}    
+          </tbody>
+        </table>
+    </div>
+
+    <div class="form-actions">
+     <button class="btn btn-danger">Previous</button>
+     <button type="submit" class="btn btn-success">Continue</button>
+    </div>
+   </form>
+  </div>
+ </div>
+
+
+{% endblock %}

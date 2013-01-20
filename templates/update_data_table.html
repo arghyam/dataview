@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="span6">
+   <form class="form-horizontal" enctype="multipart/form-data" name="upload_data_table_form" method="post">
+    <legend>Update Data Table to {{ data_table.data_table_name}}</legend>
+    
+    <div class="control-group">
+     <label class="control-label" for="name">Name</label>
+     <div class="controls">
+    <input type="text" id="name" name="name"  value="{{data_table.data_table_name}}"/>
+     </div>
+    </div>
+     
+    <div class="control-group">
+     <label class="control-label" for="description">Description</label>
+     <div class="controls">
+    <textarea rows="3" id="description" name="description">{{data_table.data_table_description}}</textarea>
+     </div>
+    </div>
+     
+     
+    <div class="control-group">
+     <label class="control-label" for="description">CSV File</label>
+     <div class="controls">
+      <input type="file" id="uploaded_csv_file" name="uploaded_csv_file" />
+     </div>
+    </div>
+
+    <input type="hidden" name="data_source_id" value="{{data_source_id}}"/>
+     
+    <div class="form-actions">
+     <button class="btn btn-danger">Cancel</button>
+     <button type="submit" class="btn btn-success">Continue</button>
+    </div>
+   </form>
+  </div>
+ </div>
+
+
+{% endblock %}

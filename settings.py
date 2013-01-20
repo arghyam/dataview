@@ -22,3 +22,4 @@ TIMEZONE = 'Asia/Calcutta'
 LOGFILE='error.log'
 
 DATABASE = './database/test.db'
+UPLOAD_FOLDER = './temp/'
