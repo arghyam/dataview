@@ -13,7 +13,7 @@ GA_CODE=''
 GMAPS_CODE=''
 
 #: Database backend
-SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
+SQLALCHEMY_DATABASE_URI = 'sqlite:////media/truecrypt5/code/arghyam/dataview/database/test.sqlite'
 #: Secret key
 SECRET_KEY = 'make this something random'
 #: Timezone

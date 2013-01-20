@@ -6,7 +6,7 @@
     <link href="/static/bootstrap/css/bootstrap_spacelab.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
-    <title>{% block title %}{% endblock %} - My Webpage</title>
+    <title>DataView - {{ title }}</title>
     {% endblock %}
 </head>
 <body>
@@ -21,8 +21,9 @@
         <a class="brand" href="#">DataView</a>
         <div class="nav-collapse">
           <ul class="nav">
-                   <li class="active"><a href="">Home</a></li> 
+                   <li class="active"><a href="/">Home</a></li> 
                    <li><a href="">Explore</a></li>               
+                   <li><a href="/upload">Upload</a></li>               
                    <li><a href="">API</a></li>               
                    <li><a href="">About</a></li>               
                    <li><a href="">Help</a></li>               
@@ -44,13 +45,13 @@
 <header class="jumbotron subhead" id="overview">
   <div class="row">
     <div class="span6">
-      <h2>Title</h2>
-      <p class="lead">Caption</p>
+      <h2>{{ title }}</h2>
+      <p class="lead">{{ caption }}</p>
     </div>
     <div class="span6">
    
            <div class="well">
-             So whats up
+             {{ notes }}
            </div>
     </div>
   </div>
