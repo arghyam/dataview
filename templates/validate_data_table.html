@@ -7,18 +7,18 @@
 <div class="row">
   <div class="span6">
    <form class="form-horizontal" name="upload_data_table_form" method="post">
-    <legend>Validate {{ name }} columns  </legend>
+    <legend>Validate {{ data_table.data_table_name }} columns  </legend>
     <div class="control-group">
      <label class="control-label" for="name">Name</label>
      <div class="controls">
-    <input type="text" id="name" name="name" value="{{ name }}" placeholder="Name of the data set"/>
+    <input type="text" id="name" name="name" value="{{ data_table.data_table_name }}" placeholder="Name of the data set"/>
      </div>
     </div>
      
     <div class="control-group">
      <label class="control-label" for="description">Description</label>
      <div class="controls">
-    <textarea rows="3" id="description" name="description">{{ description }}</textarea>
+    <textarea rows="3" id="description" name="description">{{ data_table.data_table_description }}</textarea>
      </div>
     </div>
 
@@ -51,12 +51,16 @@
     </div>
 
     <div class="form-actions">
-     <button class="btn btn-danger">Previous</button>
+     <button id="previous" type="button" class="btn btn-danger">Previous</button>
      <button type="submit" class="btn btn-success">Continue</button>
     </div>
    </form>
   </div>
  </div>
-
+ <script>
+$('#previous').on('click', function (e) {
+    window.location.href='/update/data_table/{{data_table.data_table_id}}';
+});
+</script>
 
 {% endblock %}

@@ -114,7 +114,7 @@ def validateDataTable(data_table_id):
                             columns[key]=col
                             column_list.append(key)
 
-                return render_template('validate_data_table.html', title="Validation",Caption="Upload a new data set",notes="Select the validation format for each column. This is used for validating the csv columns uploaded by you.",columns=columns,column_list=column_list, name=data_table.data_table_name, description=data_table.data_table_description)
+                return render_template('validate_data_table.html', title="Validation",Caption="Upload a new data set",notes="Select the validation format for each column. This is used for validating the csv columns uploaded by you.",columns=columns,column_list=column_list, data_table=data_table)
             else:
                 #send error message
                 print "Its complete"
