@@ -84,43 +84,102 @@ def validateDataTable(data_table_id):
     if request.method == 'GET':
         tables = DataTable.query.filter_by(data_table_id=data_table_id)
         for data_table in tables:
-            if data_table.data_table_upload_complete == models.UPLOAD_STATUS.INCOMPLETE:
-                #1. Read the file, first row, which has headers
-                columns = {}
-                column_list = []
-                filename = 'data_table_'+str(data_table_id)+".csv"
-                with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'rb') as csvfile:
-                    csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"') 
-                    seq_num = 0            
-                    for row in csv_reader:  
-                        for col in row:
-                            seq_num = seq_num + 1
-                            key = str(seq_num)+utils.getKey(col)
-                            columns[key]=col
-                            column_list.append(key)
-
-                return render_template('validate_data_table.html', title="Validation",Caption="Upload a new data set",notes="Select the validation format for each column. This is used for validating the csv columns uploaded by you.",columns=columns,column_list=column_list, data_table=data_table)
-            else:
-                #validate
-                #1a: if everything is okay then add columns
+            #1. Read the file, first row, which has headers
+            columns = {}
+            column_list = []
+            filename = 'data_table_'+str(data_table_id)+".csv"
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'rb') as csvfile:
+                csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"') 
+                seq_num = 0            
+                for row in csv_reader:  
+                    for col in row:
+                        seq_num = seq_num + 1
+                        key = str(seq_num)+utils.getKey(col)
+                        columns[key]=col
+                        column_list.append(key)
+                    #break after first row. No need to got further
+                    break
+            #depending on data_table.data_table_upload_complete make it only readable
+            return render_template('validate_data_table.html', title="Validation",Caption="Upload a new data set",notes="Select the validation format for each column. This is used for validating the csv columns uploaded by you.",columns=columns,column_list=column_list, data_table=data_table)
                 
-                #1b: if not okay then show errors
+    ####         ####
+    ####  POST   ####
+    ####         ####
+    else:
+        #you can do below things against a temp database? if everything is okay then repeat
+        #on actual database??
+        columns_list = {} 
+        columns_validation_list = [] #get form form
+        column_short_name_list = {} 
+        columns_data_column_id = {}
+        filename = 'data_table_'+str(data_table_id)+".csv"
+        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'rb') as csvfile:
+            csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"') 
+            first_row = True            
+            data_table = DataTable.query.filter_by(data_table_id=data_table_id).first()
+            sql = ""
+            for row in csv_reader:  
+                seq_num = 0 #column numbers
+                if first_row:
+                    first_row = False  
+                    if data_table.data_table_upload_complete != models.UPLOAD_STATUS.ADDED_DATA_COLUMN:
+                        #insert data columns
+                        create_sql ="CREATE TABLE values_data_table_"+str(data_table_id)+" ("
+                        for col in row:
+                            print str(seq_num)
+                            seq_num = seq_num + 1
+                            data_column_name = col
+                            data_column_short_name = str(seq_num)+utils.getKey(col)
+                            #insert into DataColumn
+                            data_column = DataColumn(data_column_name=data_column_name, data_column_short_name=data_column_short_name,data_column_data_table_id=data_table_id)
+                            models.db.session.add(data_column)
+                            models.db.session.commit()
+                            #save for next rows
+                            columns_data_column_id[str(seq_num)]=data_column.data_column_id
+                            columns_list[str(seq_num)] = data_column_name
+                            column_short_name_list[str(seq_num)] = data_column_short_name
+                            #TODO create a table called values_data_table_<data_table_id> depending on columns                           
+                            create_sql = create_sql+"'"+data_column_short_name+"',"
+                        
+                        #update the status
+                        data_table.data_table_upload_complete = models.UPLOAD_STATUS.ADDED_DATA_COLUMN
+                        models.db.session.commit()
 
-                #2a: create a table equal to values_data_table_<data_table_id> depending on columns
+                        create_sql = create_sql[:-1]
+                        create_sql = create_sql+");"
+                        print create_sql
+                        rp = models.db.session.execute(create_sql)
+                        models.db.session.commit()
 
-                #2b: insert csv into that table
+                        data_table.data_table_upload_complete = models.UPLOAD_STATUS.CREATED_DATA_TABLE
+                        models.db.session.commit()
 
-                #3a: commit everything
+                else:
+                    #insert data
+                    sql="insert into values_data_table_"+str(data_table_id)+" values ("
+                    for col in row:
+                        seq_num = seq_num + 1
+                        #data_column_short_name = column_short_name_list[str(seq_num)]
+                        #data_column_id = columns_data_column_id[str(seq_num)] 
+                        #as of now everything is string
+                        sql = sql+"'"+str(col)+"',"
+                    sql = sql[:-1]
+                    sql = sql +");"
+                print sql
+                rp = models.db.session.execute(sql)
+                models.db.session.commit()
 
-                #4: Forward to explore data_table
-                print "Its complete"
+        #4: Forward to view data_table
+        print "Its complete"
+        return redirect(url_for('viewDataTable', data_table_id=data_table_id), code=303)
+
 
 @app.route('/view/data_table/<data_table_id>', methods=['GET'])
-def viewDataTable():
+def viewDataTable(data_table_id):
     #1. get data_table
     #2. get data_source
     #3. get data_columns
-    #4. get the excel data
+    #4. get values_data_table_<data_table_id>
     return render_template('view_data_table.html')
 
 @app.route('/create/data_source', methods=['GET', 'POST'])

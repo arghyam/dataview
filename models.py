@@ -9,32 +9,36 @@ db = SQLAlchemy(app)
 
 
 class PRIVACY:
-    PUBLIC = 0
+    PUBLIC  = 0
     PRIVATE = 1
 
 
 class UPLOAD_STATUS:
-    INCOMPLETE = 0
-    COMPLETE = 1
+    INCOMPLETE          = 0
+    UPLOADED            = 1
+    VALIDATED           = 2
+    ADDED_DATA_COLUMN   = 3
+    CREATED_DATA_TABLE  = 4
+    COMPLETE            = 100
 # --- Models ------------------------------------------------------------------
 
 class Users(db.Model):
     __tablename__ = 'users'
-    user_id = db.Column(db.Integer, primary_key=True)
-    username     = db.Column(db.String(80), unique=True)
+    user_id     = db.Column(db.Integer, primary_key=True)
+    username    = db.Column(db.String(80), unique=True)
     pw_hash     = db.Column(db.String(80))
-    email         = db.Column(db.String(80), unique=True)
-    name         = db.Column(db.Unicode(80))
+    email       = db.Column(db.String(80), unique=True)
+    name        = db.Column(db.Unicode(80))
 
 class DataSource(db.Model):
     __tablename__ = 'data_source'
-    data_source_id = db.Column(db.Integer, primary_key=True)    
-    data_source_name                     = db.Column(db.Unicode(200))
-    data_source_owner_user_id             = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    data_source_organization_name          = db.Column(db.Unicode(200))
-    data_source_organization_adddress     = db.Column(db.Unicode(300))
-    data_source_organization_phone         = db.Column(db.String(50))
-    data_source_organization_web         = db.Column(db.String(100))
+    data_source_id                      = db.Column(db.Integer, primary_key=True)    
+    data_source_name                    = db.Column(db.Unicode(200))
+    data_source_owner_user_id           = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    data_source_organization_name       = db.Column(db.Unicode(200))
+    data_source_organization_adddress   = db.Column(db.Unicode(300))
+    data_source_organization_phone      = db.Column(db.String(50))
+    data_source_organization_web        = db.Column(db.String(100))
 
 class DataTable(db.Model):
     __tablename__ = 'data_table'
