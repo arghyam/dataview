@@ -177,10 +177,25 @@ def validateDataTable(data_table_id):
 @app.route('/view/data_table/<data_table_id>', methods=['GET'])
 def viewDataTable(data_table_id):
     #1. get data_table
+    data_table = DataTable.query.filter_by(data_table_id=data_table_id).first()
+    data_table_data_source_id = data_table.data_table_data_source_id
+    title=data_table.data_table_name
+    caption = data_table.data_table_description
+    notes = "Notes"
     #2. get data_source
+    data_source = DataSource.query.filter_by(data_source_id=data_table_data_source_id).first()
+    data_source_owner_user_id = data_source.data_source_owner_user_id
+    data_owner =Users.query.filter_by(user_id=data_source_owner_user_id).first()
     #3. get data_columns
+    data_columns = DataColumn.query.filter_by(data_column_data_table_id=data_table_id)
+    no_of_data_columns = data_columns.count()
     #4. get values_data_table_<data_table_id>
-    return render_template('view_data_table.html')
+    sql="select * from values_data_table_"+str(data_table_id)
+    values_data_table = models.db.session.execute(sql)
+
+
+
+    return render_template('view_data_table.html',title=title, caption=caption, notes=notes, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner)
 
 @app.route('/create/data_source', methods=['GET', 'POST'])
 def createDataSource():
