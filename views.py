@@ -20,7 +20,7 @@ def favicon():
 
 @app.route('/')
 def index():
-    return render_template('home.html')
+    return render_template('home.html',home_tab="active")
 
 
 @app.route('/create/data_table/', methods=['GET', 'POST'])
@@ -195,28 +195,36 @@ def viewDataTable(data_table_id):
 
 
 
-    return render_template('view_data_table.html',title=title, caption=caption, notes=notes, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner)
+    return render_template('view_data_table.html',title=title, caption=caption, notes=notes, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,explore_tab="active")
 
 @app.route('/create/data_source', methods=['GET', 'POST'])
 def createDataSource():
+    #TODO:3
     #for adding new data source
     return render_template('create_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
 
 @app.route('/update/data_source', methods=['GET', 'POST'])
 def updateDataSource():
+    #TODO:4
     #update the details of data source
     return render_template('update_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
 
 @app.route('/view/data_source/<data_source_id>', methods=['GET'])
 def viewDataSource(data_source_id):
+    #TODO:2
     #view a single data source details
     #also display the data_tables under this source with column details and not the actual data
-    #button to add a new table
-    return render_template('view_data_source.html',title="Data Source",caption="View",notes="You can add data tables to this source or edit the information related to this source.")
+    #button to add a new table - if its yours
+    return render_template('view_data_source.html',title="Data Source",caption="View",notes="You can add data tables to this source or edit the information related to this source.",explore_tab="active")
 
 @app.route('/list/data_source/', methods=['GET'])
 def listAllDataSource():
+    #TODO:1
     #list all the data sources
-    #button to browse the single data source
+    #first yours and then followed by others
+
+    #For all - button to browse the single data source
+    #For yours - button to add a new data table to that source
+
     #button to add a new data source
-    return render_template('list_all_data_source.html',title="Data Sources",caption="All your data sources.",notes="Upload a new data table either by creating a new data source or by adding to an existing data source")
+    return render_template('list_all_data_source.html',title="Data Sources",caption="All your data sources.",notes="Upload a new data table either by creating a new data source or by adding to an existing data source",explore_tab="active")
