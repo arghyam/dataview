@@ -44,20 +44,23 @@
     <table class="table table-bordered">
         <tbody>
             <tr>
-                <td>Organization</td>
-                <td>{{data_source.data_source_organization_name}},{{data_source.data_source_organization_adddress}}</td>
+                <td>Organnization</td>
+                <td>{{data_source.data_source_organization_name}} <i class="icon-home"></i> {{data_source.data_source_organization_adddress}} <i class="icon-globe"></i> <a href="{{data_source.data_source_organization_web}}">www</a></td>
             </tr>
             <tr>
                 <td>Contact</td>
-                <td>{{data_owner.name}},{{data_owner.email}}</td>
+                <td><i class="icon-user"></i> {{data_owner.name}} <i class="icon-envelope"></i> {{data_owner.email}}</td>
             </tr>
             <tr>
                 <td>License</td>
-                <td></td>
+                <td>License</td>
+            </tr>  
+            <tr>
+                <td colspan=2><i class="icon-tags"></i> Tags</td>
             </tr>  
             <tr>
                 <td colspan=2>
-                    <a class="btn btn-mini" href="#"><i class="icon-heart"></i> Like</a>
+                    <a class="btn btn-mini" href="#"><i class="icon-heart"></i> Like (100)</a>
                     <a class="btn btn-mini" href="#"><i class="icon-share"></i> Share</a>
                     <a class="btn btn-mini" href="#"><i class="icon-download-alt"></i> Download</a>
                 </td>
