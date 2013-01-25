@@ -4,15 +4,65 @@
     {{ super() }}
 {% endblock %}
 {% block content %}
-<div class="row">
-    <div class="span2">
-      <div class="well">
-        <h3>Something</h3>
-      </div>
-    </div>
+<div class="data_source">
+  <div class="span12">
+<table class="table table-striped table-bordered">
+    <thead>
+        <th> Data Source </th>
+        <th> Contact </th>
+        <th> Organization </th>
+        <th> Address </th>
+        <th> Phone </th>
+        <th> Website </th>
+        <th> Add </th>
+    </thead>
+    <tbody>
+    
+    <tr>
+            {% for data_source in data_source_all %}
+            <tr>
 
-  <div class="span6">
-<button class="btn btn-success">Create a new Data Source</button>
+                    <td>
+                        <a href="/view/data_source/{{data_source.data_source_id}}">{{ data_source.data_source_name }}</a>
+                    </td>
+                    <td>
+                       Contact
+                    </td>                    
+                    <td>
+                        {{ data_source.data_source_organization_name }}
+                    </td>
+                    <td>
+                        {{ data_source.data_source_organization_adddress }}
+                    </td>
+                    <td>
+                        {{ data_source.data_source_organization_phone }}
+                    </td>
+                    <td>
+                        {{ data_source.data_source_organization_web }}
+                    </td>
+                    <td>
+                       <button id="add_data_set_{{data_source.data_source_id}}" class="btn btn-primary">Add new data set</button>
+
+                        <script>
+                        $("#add_data_set_{{data_source.data_source_id}}").click(function() {
+                          window.location.href="/create/data_table/?data_source_id={{data_source.data_source_id}}";
+                        });
+                        </script>
+
+                    </td>
+            </tr>
+            {% endfor %}
+    <tr>
+    </tbody>
+
+</table>
+
+<button id="create_data_source" class="btn btn-primary">Create a new Data Source</button>
+<script>
+$("#create_data_source").click(function() {
+  window.location.href="/create/data_source";
+});
+</script>
 </div>
 </div>
 {% endblock %}

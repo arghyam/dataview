@@ -54,8 +54,7 @@ def updateDataTable(data_table_id):
     if request.method == 'GET':
         tables = DataTable.query.filter_by(data_table_id=data_table_id)
         for data_table in tables:
-            if data_table.data_table_upload_complete == models.UPLOAD_STATUS.INCOMPLETE:
-                return render_template('update_data_table.html', title="Update",Caption="Update data set",notes="Upload a new data set", data_table = data_table, data_source_id=data_table.data_table_data_source_id)
+            return render_template('update_data_table.html', title="Update",Caption="Update data set",notes="Upload a new data set", data_table = data_table, data_source_id=data_table.data_table_data_source_id)
     
     if request.method == 'POST':
         name = request.form["name"]
@@ -195,7 +194,7 @@ def viewDataTable(data_table_id):
 
 
 
-    return render_template('view_data_table.html',title=title, caption=caption, notes=notes, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,explore_tab="active")
+    return render_template('view_data_table.html',title=title, caption=caption, notes=notes, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,explore_tab="active",data_table_id=data_table_id)
 
 @app.route('/create/data_source', methods=['GET', 'POST'])
 def createDataSource():
@@ -224,7 +223,9 @@ def listAllDataSource():
     #first yours and then followed by others
 
     #For all - button to browse the single data source
+    data_source_all = DataSource.query.filter_by().all()
+
     #For yours - button to add a new data table to that source
 
     #button to add a new data source
-    return render_template('list_all_data_source.html',title="Data Sources",caption="All your data sources.",notes="Upload a new data table either by creating a new data source or by adding to an existing data source",explore_tab="active")
+    return render_template('list_all_data_source.html',title="Data Sources",caption="All your data sources.",notes="Upload a new data table either by creating a new data source or by adding to an existing data source",explore_tab="active",data_source_all=data_source_all)

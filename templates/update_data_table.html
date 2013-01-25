@@ -29,14 +29,14 @@
      </div>
     </div>
      
-     
+    {% if data_table.data_table_upload_complete == 0 %}
     <div class="control-group">
      <label class="control-label" for="description">CSV File</label>
      <div class="controls">
       <input type="file" id="uploaded_csv_file" name="uploaded_csv_file" />
      </div>
     </div>
-
+    {% endif %}
     <input type="hidden" name="data_source_id" value="{{data_source_id}}"/>
      
     <div class="form-actions">
