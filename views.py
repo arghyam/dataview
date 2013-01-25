@@ -10,9 +10,11 @@ from flask import render_template, redirect, request, g, url_for, Markup, abort,
 from app import app
 import models
 import utils
+from models import Tag
+from models import TagMap
 from models import * 
 from forms import *
-
+from sqlalchemy.orm import join
 
 @app.route('/favicon.ico')
 def favicon():
@@ -33,6 +35,7 @@ def uploadDataTable():
     if request.method == 'POST':
         name = request.form["name"]
         description = request.form["description"]
+        tags = request.form["tags"]
         data_source_id = int(request.form["data_source_id"])
         uploaded_csv_file =  request.files.get('uploaded_csv_file')
         #1. insert into the data_table
@@ -40,6 +43,26 @@ def uploadDataTable():
         models.db.session.add(data_table)
         models.db.session.commit()
 
+        print tags
+        #2. insert comma seaparated tags
+        all_tags = tags.split(',')
+        for tag in all_tags:
+            tag = tag.strip()
+            tag_id = 0
+            db_tag = Tag.query.filter_by(tag_name=tag).first()
+            if db_tag:
+                tag_id = db_tag.tag_id
+            else:
+                db_tag_inserted = Tag(tag_name=tag)
+                models.db.session.add(db_tag_inserted)
+                models.db.session.commit()
+                tag_id=db_tag_inserted.tag_id
+
+            if tag_id != 0:
+                db_tag_map = TagMap(tag_id=tag_id,data_table_id=data_table.data_table_id)
+                models.db.session.add(db_tag_map)
+                models.db.session.commit()
+  
         
         #2. save the file to temp folder
         data_table_id = str(data_table.data_table_id)
@@ -58,7 +81,8 @@ def updateDataTable(data_table_id):
     
     if request.method == 'POST':
         name = request.form["name"]
-        description = request.form["description"]        
+        description = request.form["description"]
+        tags = request.form["tags"]
         #1. update the data_table
         data_table = DataTable.query.filter_by(data_table_id=data_table_id).first()
 
@@ -66,15 +90,34 @@ def updateDataTable(data_table_id):
         data_table.data_table_description = description
         models.db.session.commit()
 
+        print tags
+        #2. insert comma seaparated tags
+        all_tags = tags.split(',')
+        for tag in all_tags:
+            tag = tag.strip()
+            tag_id = 0
+            db_tag = Tag.query.filter_by(tag_name=tag).first()
+            if db_tag:
+                tag_id = db_tag.tag_id
+            else:
+                db_tag_inserted = Tag(tag_name=tag)
+                models.db.session.add(db_tag_inserted)
+                models.db.session.commit()
+                tag_id=db_tag_inserted.tag_id
+
+            if tag_id != 0:
+                db_tag_map = TagMap(tag_id=tag_id,data_table_id=data_table_id)
         
-        #2. save the file to temp folder
+        #3. save the file to temp folder
         if request.files.get('uploaded_csv_file'):
             uploaded_csv_file =  request.files.get('uploaded_csv_file')
             data_table_id = str(data_table.data_table_id)
             filename = 'data_table_'+data_table_id+".csv"
             uploaded_csv_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        #3. Forward to validate data page with data_table_id
+
+
+        #4. Forward to validate data page with data_table_id
         return redirect(url_for('validateDataTable', data_table_id=data_table_id), code=303)
 
 
@@ -181,6 +224,13 @@ def viewDataTable(data_table_id):
     title=data_table.data_table_name
     caption = data_table.data_table_description
     notes = "Notes"
+    
+
+    #1a. Get tags
+    #tags = models.db.session.query(Tag, TagMap).filter_by(TagMap.data_table_id=data_table_id).all()
+    tags = models.db.session.query(Tag).select_from(join(Tag, TagMap)).filter(TagMap.data_table_id==data_table_id).all()
+    #models.db.session.query(Tag, TagMap).filter(Tag.tag_id==TagMap.tag_id).filter(TagMap.data_table_id=='xavier@yahoo.com').all()
+
     #2. get data_source
     data_source = DataSource.query.filter_by(data_source_id=data_table_data_source_id).first()
     data_source_owner_user_id = data_source.data_source_owner_user_id
@@ -194,7 +244,7 @@ def viewDataTable(data_table_id):
 
 
 
-    return render_template('view_data_table.html',title=title, caption=caption, notes=notes, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,explore_tab="active",data_table_id=data_table_id)
+    return render_template('view_data_table.html',title=title, caption=caption, notes=notes, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,explore_tab="active",data_table_id=data_table_id,tags=tags)
 
 @app.route('/create/data_source', methods=['GET', 'POST'])
 def createDataSource():
@@ -211,10 +261,16 @@ def updateDataSource():
 @app.route('/view/data_source/<data_source_id>', methods=['GET'])
 def viewDataSource(data_source_id):
     #TODO:2
-    #view a single data source details
+    data_source = DataSource.query.filter_by(data_source_id=data_source_id).first()    
+    data_source_owner_user_id = data_source.data_source_owner_user_id
+    data_owner =Users.query.filter_by(user_id=data_source_owner_user_id).first()
     #also display the data_tables under this source with column details and not the actual data
+    data_tables = DataTable.query.filter_by(data_table_data_source_id=data_source_id).all()    
+    
+
     #button to add a new table - if its yours
-    return render_template('view_data_source.html',title="Data Source",caption="View",notes="You can add data tables to this source or edit the information related to this source.",explore_tab="active")
+
+    return render_template('view_data_source.html',title=data_source.data_source_name,caption="",notes="You can add data tables to this source or edit the information related to this source.",explore_tab="active",data_source=data_source,data_owner=data_owner,data_tables=data_tables)
 
 @app.route('/list/data_source/', methods=['GET'])
 def listAllDataSource():

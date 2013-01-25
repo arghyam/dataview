@@ -13,7 +13,7 @@
 
   <div class="span6">
    <form class="form-horizontal" enctype="multipart/form-data" name="upload_data_table_form" method="post">
-    <legend>Adding Data Collection to {{ data_source.data_source_name}}</legend>
+    <legend>Adding Data Set to {{ data_source.data_source_name}}</legend>
     
     <div class="control-group">
      <label class="control-label" for="name">Name</label>
@@ -28,7 +28,13 @@
     <textarea rows="3" id="description" name="description"></textarea>
      </div>
     </div>
-     
+
+    <div class="control-group">
+     <label class="control-label" for="tags">Tags</label>
+     <div class="controls">
+    <input type="text" id="tags" name="tags" placeholder="Comma seaparated tags"/>
+     </div>
+    </div>     
      
     <div class="control-group">
      <label class="control-label" for="description">CSV File</label>

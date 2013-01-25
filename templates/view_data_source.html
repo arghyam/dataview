@@ -1,13 +1,96 @@
 {% extends "base.html" %}
-{% block title %}Index{% endblock %}
+{% block title %}Upload{% endblock %}
 {% block head %}
     {{ super() }}
-    <style type="text/css">
-        .important { color: #336699; }
-    </style>
+    <link href="/static/datatable/css/DT_bootstrap.css" rel="stylesheet">
+
+    <script type="text/javascript" language="javascript" src="/static/datatable/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/datatable/js/DT_bootstrap.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+            $('#data_source_table_id').dataTable();
+        } );
+    </script>    
 {% endblock %}
 {% block content %}
-    <p class="important">
-      Data Source view
-    </p>
+<div class="data_source">
+  <div class="span12">
+
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td><strong>Organnization</strong></td>
+                <td>{{data_source.data_source_organization_name}} <i class="icon-home"></i> {{data_source.data_source_organization_adddress}} <i class="icon-globe"></i> <a href="{{data_source.data_source_organization_web}}">www</a></td>
+            </tr>
+            <tr>
+                <td><strong>Contact</strong></td>
+                <td><i class="icon-user"></i> {{data_owner.name}} <i class="icon-envelope"></i> {{data_owner.email}}</td>
+            </tr>
+            <tr>
+                <td><strong>License</strong></td>
+                <td>License</td>
+            </tr>  
+            <tr>
+                <td colspan=2><i class="icon-tags"></i> Tags, </td>
+            </tr>
+            <tr>
+                <td colspan=2>
+                    <a class="btn btn-mini" href="#"><i class="icon-heart"></i> Like (100)</a>
+                    <a class="btn btn-mini" href="#"><i class="icon-share"></i> Share</a>
+                    <a class="btn btn-mini" href="/update/data_source/{{data_source.data_source_id}}"><i class="icon-edit"></i>Edit</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+ <legend>Data Sets</legend>
+
+
+    <table class="table table-bordered" id="data_source_table_id">
+        <thead>
+        <tr>     
+                <th>Data Set</th>           
+                <th>Description</th>
+                <th>Privacy</th>
+                <th>Tags</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for data_table in data_tables %}
+            <tr>
+            <td>
+                <a href="/view/data_table/{{ data_table.data_table_id}}">{{ data_table.data_table_name}}</a>
+            </td>
+            <td>
+                {{ data_table.data_table_description}}
+            </td>
+            <td>
+                {{ data_table.data_table_privacy}}
+            </td>            
+            <td>
+                tags
+            </td>
+            </tr>            
+
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+
+<tr><td colspan=2>
+            <button id="create_data_source" class="btn btn-primary">Create a new Data Set</button>
+<script>
+$("#create_data_source").click(function() {
+  window.location.href="/create/data_table/?data_source_id={{data_source.data_source_id}}";
+});
+</script></td>
+</tr>
+
+
+
+</div>
+</div>
 {% endblock %}

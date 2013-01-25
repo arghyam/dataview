@@ -58,3 +58,14 @@ class DataColumn(db.Model):
     data_column_name                 = db.Column(db.Unicode(500))
     data_column_short_name           = db.Column(db.Unicode(500))
     data_column_data_table_id        = db.Column(db.Integer, db.ForeignKey('data_table.data_table_id'), nullable=False)    
+
+class Tag(db.Model):
+    __tablename__ = 'tag'
+    tag_id                   = db.Column(db.Integer, primary_key=True)        
+    tag_name                 = db.Column(db.Unicode(500))
+
+class TagMap((db.Model)):
+    __tablename__ = 'tag_map'
+    tag_map_id               = db.Column(db.Integer, primary_key=True)
+    data_table_id            = db.Column(db.Integer, db.ForeignKey('data_table.data_table_id'), nullable=False)
+    tag_id                   = db.Column(db.Integer, db.ForeignKey('tag.tag_id'), nullable=False)

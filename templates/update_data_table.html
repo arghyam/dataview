@@ -13,7 +13,7 @@
 
   <div class="span6">
    <form class="form-horizontal" enctype="multipart/form-data" name="upload_data_table_form" method="post">
-    <legend>Update Data Table to {{ data_table.data_table_name}}</legend>
+    <legend>Update Data Set to {{ data_table.data_table_name}}</legend>
     
     <div class="control-group">
      <label class="control-label" for="name">Name</label>
@@ -28,6 +28,14 @@
     <textarea rows="3" id="description" name="description">{{data_table.data_table_description}}</textarea>
      </div>
     </div>
+
+
+    <div class="control-group">
+     <label class="control-label" for="tags">Tags</label>
+     <div class="controls">
+    <input type="text" id="tags" name="tags" placeholder="Tags for the data set"/>
+     </div>
+    </div>
      
     {% if data_table.data_table_upload_complete == 0 %}
     <div class="control-group">
@@ -37,6 +45,10 @@
      </div>
     </div>
     {% endif %}
+
+
+
+
     <input type="hidden" name="data_source_id" value="{{data_source_id}}"/>
      
     <div class="form-actions">

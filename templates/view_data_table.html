@@ -45,7 +45,7 @@
         <tbody>
             <tr>
                 <td><strong>Organnization</strong></td>
-                <td>{{data_source.data_source_organization_name}} <i class="icon-home"></i> {{data_source.data_source_organization_adddress}} <i class="icon-globe"></i> <a href="{{data_source.data_source_organization_web}}">www</a></td>
+                <td><a href="/view/data_source/{{data_source.data_source_id}}">{{data_source.data_source_organization_name}}</a> <i class="icon-home"></i> {{data_source.data_source_organization_adddress}} <i class="icon-globe"></i> <a href="{{data_source.data_source_organization_web}}">www</a></td>
             </tr>
             <tr>
                 <td><strong>Contact</strong></td>
@@ -56,7 +56,11 @@
                 <td>License</td>
             </tr>  
             <tr>
-                <td colspan=2><i class="icon-tags"></i> Tags</td>
+                <td colspan=2><i class="icon-tags"></i> Tags:
+                    {% for tag in tags %}
+                        <i class="icon-tag"></i>{{ tag.tag_name }}
+                    {% endfor %}
+                </td>
             </tr>  
             <tr>
                 <td colspan=2>
