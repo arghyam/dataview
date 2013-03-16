@@ -69,3 +69,17 @@ class TagMap((db.Model)):
     tag_map_id               = db.Column(db.Integer, primary_key=True)
     data_table_id            = db.Column(db.Integer, db.ForeignKey('data_table.data_table_id'), nullable=False)
     tag_id                   = db.Column(db.Integer, db.ForeignKey('tag.tag_id'), nullable=False)
+
+
+class Plugin((db.Model)):
+    __tablename__ = 'plugin'
+    plugin_id            = db.Column(db.Integer, primary_key=True)
+    plugin_key           = db.Column(db.Unicode(100))    
+    version              = db.Column(db.Integer)
+    plugin_type          = db.Column(db.Integer)
+    name                 = db.Column(db.Unicode(100))    
+    description          = db.Column(db.Unicode(500))
+    author               = db.Column(db.Unicode(500))
+    url               = db.Column(db.Unicode(500))
+    image_url            = db.Column(db.Unicode(500))
+    status               = db.Column(db.Integer)

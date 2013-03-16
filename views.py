@@ -12,6 +12,7 @@ import models
 import utils
 from models import Tag
 from models import TagMap
+from models import Plugin
 from models import * 
 from forms import *
 from sqlalchemy.orm import join
@@ -285,3 +286,44 @@ def listAllDataSource():
 
     #button to add a new data source
     return render_template('list_all_data_source.html',title="Data Sources",caption="All your data sources.",notes="Upload a new data table either by creating a new data source or by adding to an existing data source",explore_tab="active",data_source_all=data_source_all)
+
+@app.route('/list/visualizations/', methods=['GET'])
+def listVisualizations():
+    #get the list of all the available visualizations from plugin table
+    #plugin_visualizations_all = Plugin.query.filter_by(plugin_type=1, status=1)
+    plugin_visualizations_all = Plugin.query.filter_by().all()
+    data_table_id = request.args.get('data_table_id', '')
+    if data_table_id != "":
+        data_table_id =int(data_table_id)
+    else:
+        data_table_id = 0
+    print data_table_id
+    #pass the returned value to template for display 
+    return render_template('list_visualizations.html',title="List of Available Visualization",caption="",notes="List of Available Visualization. Please select one to continue",explore_tab="active",plugin_visualizations_all=plugin_visualizations_all,data_table_id=data_table_id)
+
+
+@app.route('/create/visualizations/<plugin_key>/', methods=['GET'])
+def createVisualizations(plugin_key):
+    #get the list of all the available visualizations from plugin table
+    #plugin_visualizations_all = Plugin.query.filter_by(plugin_type=1, status=1)
+    plugin_visualizations_all = Plugin.query.filter_by().all()
+
+    data_table_id = request.args.get('data_table_id', '')
+    if data_table_id != "":
+        data_table_id =int(data_table_id)
+    else:
+        data_table_id = 0
+    print data_table_id
+
+    #pass the returned value to template for display 
+    return render_template('list_visualizations.html',title="List of Available Visualization",caption="",notes="List of Available Visualization. Please select one to continue",explore_tab="active",plugin_visualizations_all=plugin_visualizations_all)
+
+
+@app.route('/view/visualization/<visualization_id>', methods=['GET'])
+def viewVisualization():
+    #get the visualization details using visualization_id
+    #get the data table name
+    #pass the data table id and matched_colums and call the plugin.visualize()
+    content = ""
+    #pass the returned value to template for display 
+    return render_template('view_visualization.html',title="view",caption="",notes="You can add data tables to this source or edit the information related to this source.",explore_tab="active",visualization_content=content)

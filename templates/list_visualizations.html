@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+  <div class="span12">
+<table class="table table-striped table-bordered">
+    <tbody>
+    
+            {% for visual_plugin in plugin_visualizations_all %}
+            <table class="table table-bordered">
+            <tr>
+
+                    <td colspan=2>
+                        <b>{{ visual_plugin.name }}</b>
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        <img src="{{ visual_plugin.image_url }}" width="250px"/>
+                    </td>
+                    <td>
+                        {{ visual_plugin.description }}
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Author
+                    </td>
+
+                    <td>
+                        {{ visual_plugin.author }}
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Website
+                    </td>
+
+                    <td>
+                        {{ visual_plugin.url }}
+                    </td>
+            </tr>
+            <tr>
+                    <td colspan=2>
+                       <button id="use_visualization_{{visual_plugin.plugin_key}}" class="btn btn-primary">Create using this</button>
+
+                        <script>
+                        $("#use_visualization_{{visual_plugin.plugin_key}}").click(function() {
+                          window.location.href="/create/visualizations/{{ visual_plugin.plugin_key }}/?data_table_id={{data_table_id}}";
+                        });
+                        </script>
+
+                    </td>
+            </tr>
+            </table>
+            {% endfor %}
+    <tr>
+    </tbody>
+
+</table>
+
+
+
+</div>
+{% endblock %}
