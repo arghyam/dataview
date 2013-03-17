@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+  <div class="span12">
+    
+            <table class="table table-bordered">
+            <tr>
+                    <td>
+                        <img src="{{ visual_plugin.image_url }}" width="250px"/>
+                    </td>
+                    <td>
+                        {{ visual_plugin.description }}
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Author
+                    </td>
+
+                    <td>
+                        {{ visual_plugin.author }}
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Website
+                    </td>
+
+                    <td>
+                        {{ visual_plugin.url }}
+                    </td>
+            </tr>
+
+            </table>
+<div class="alert alert-success">
+<button type="button" class="close" data-dismiss="alert">&times;</button>
+In order to create Choropleth visualization, we need two inputs. The first one is the column which will give the ward number. Second input will decide the color of the ward. So please select them below. <br>
+</div>
+
+    
+            <table class="table table-bordered">
+            <tr>
+                    <td>
+                        Ward Number
+                    </td>
+                    <td>
+                        <select>
+                          <option>Ward_No</option>
+                          <option>Ward_Name</option>
+                          <option>AC_No</option>
+                          <option>AC_Name</option>
+                          <option>Lat</option>
+                          <option>Long</option>
+                          <option>Reservation</option>
+                          <option>Woman</option>
+                        </select>
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Values for Choropleth
+                    </td>
+
+                    <td>
+                        <select>
+                          <option>Ward_No</option>
+                          <option>Ward_Name</option>
+                          <option>AC_No</option>
+                          <option>AC_Name</option>
+                          <option>Lat</option>
+                          <option>Long</option>
+                          <option>Reservation</option>
+                          <option>Woman</option>
+                        </select>  
+                    </td>
+            </tr>
+                <tr>
+                    <td>
+                        Title
+                    </td>
+
+                    <td>
+                        <input type="text" placeholder="Title of the visualization you are creating.">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=2>
+                        <center><button id="create" class="btn btn-primary">Create</button></center>
+                    </td>
+                </tr>                
+            </table>
+
+
+</div>
+{% endblock %}

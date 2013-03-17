@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+  <div class="span12">
+    
+    <center><img src="http://localhost:5000/static/img/5268324190_f18a99f0e9.jpg" width="600px" /></center>
+    
+
+    <br>
+
+      <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td><strong>Data</strong></td>
+                <td><a href="/view/data_table/{{data_table.data_table_id}}">{{data_table.data_table_name}}</a></td>
+            </tr>
+            <tr>
+                <td><strong>Organization</strong></td>
+                <td><a href="/view/data_source/{{data_source.data_source_id}}">{{data_source.data_source_organization_name}}</a> <i class="icon-home"></i> {{data_source.data_source_organization_adddress}} <i class="icon-globe"></i> <a href="{{data_source.data_source_organization_web}}">www</a></td>
+            </tr>
+            <tr>
+                <td><strong>Contact</strong></td>
+                <td><i class="icon-user"></i> {{data_owner.name}} <i class="icon-envelope"></i> {{data_owner.email}}</td>
+            </tr>
+            <tr>
+                <td><strong>License</strong></td>
+                <td>License</td>
+            </tr>  
+            <tr>
+                <td colspan=2><i class="icon-tags"></i> Tags:
+                    {% for tag in tags %}
+                        <i class="icon-tag"></i>{{ tag.tag_name }}
+                    {% endfor %}
+                </td>
+            </tr>  
+            <tr>
+                <td colspan=2>
+                    <a class="btn btn-mini" href="#"><i class="icon-heart"></i> Like (100)</a>
+                    <a class="btn btn-mini" href="#"><i class="icon-share"></i> Share</a>
+                    <a class="btn btn-mini" href="#"><i class="icon-download-alt"></i> Download</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</div>
+{% endblock %}

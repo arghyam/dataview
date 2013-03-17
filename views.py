@@ -306,7 +306,7 @@ def listVisualizations():
 def createVisualizations(plugin_key):
     #get the list of all the available visualizations from plugin table
     #plugin_visualizations_all = Plugin.query.filter_by(plugin_type=1, status=1)
-    plugin_visualizations_all = Plugin.query.filter_by().all()
+    visual_plugin = Plugin.query.filter_by(plugin_key=plugin_key).first()
 
     data_table_id = request.args.get('data_table_id', '')
     if data_table_id != "":
@@ -316,14 +316,43 @@ def createVisualizations(plugin_key):
     print data_table_id
 
     #pass the returned value to template for display 
-    return render_template('list_visualizations.html',title="List of Available Visualization",caption="",notes="List of Available Visualization. Please select one to continue",explore_tab="active",plugin_visualizations_all=plugin_visualizations_all)
+    return render_template('create_visualizations.html',title=visual_plugin.name,caption="",notes="Please select the columns and click create.",explore_tab="active",visual_plugin=visual_plugin)
 
 
 @app.route('/view/visualization/<visualization_id>', methods=['GET'])
-def viewVisualization():
+def viewVisualization(visualization_id):
     #get the visualization details using visualization_id
     #get the data table name
     #pass the data table id and matched_colums and call the plugin.visualize()
+    plugin_key="choropleth_blr_ward"
+    visual_plugin = Plugin.query.filter_by(plugin_key=plugin_key).first()
+
+    ################# DATA RELATED ###########################################
+    data_table_id = 20
+    data_table = DataTable.query.filter_by(data_table_id=data_table_id).first()
+    data_table_data_source_id = data_table.data_table_data_source_id
+    title=data_table.data_table_name
+    caption = data_table.data_table_description
+    notes = "Notes"
+    
+
+    #1a. Get tags
+    #tags = models.db.session.query(Tag, TagMap).filter_by(TagMap.data_table_id=data_table_id).all()
+    tags = models.db.session.query(Tag).select_from(join(Tag, TagMap)).filter(TagMap.data_table_id==data_table_id).all()
+    #models.db.session.query(Tag, TagMap).filter(Tag.tag_id==TagMap.tag_id).filter(TagMap.data_table_id=='xavier@yahoo.com').all()
+
+    #2. get data_source
+    data_source = DataSource.query.filter_by(data_source_id=data_table_data_source_id).first()
+    data_source_owner_user_id = data_source.data_source_owner_user_id
+    data_owner =Users.query.filter_by(user_id=data_source_owner_user_id).first()
+    #3. get data_columns
+    data_columns = DataColumn.query.filter_by(data_column_data_table_id=data_table_id)
+    no_of_data_columns = data_columns.count()
+    #4. get values_data_table_<data_table_id>
+    sql="select * from values_data_table_"+str(data_table_id)
+    values_data_table = models.db.session.execute(sql)
+
+
     content = ""
     #pass the returned value to template for display 
-    return render_template('view_visualization.html',title="view",caption="",notes="You can add data tables to this source or edit the information related to this source.",explore_tab="active",visualization_content=content)
+    return render_template('view_visualization.html',title="Gender Ratio",caption="",notes="Visualization of Gender Ration created using data from Bangalore BBMP 2010 Results.",explore_tab="active",visualization_content=content,visual_plugin=visual_plugin, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,data_table_id=data_table_id,tags=tags)
