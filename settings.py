@@ -23,3 +23,5 @@ LOGFILE='error.log'
 
 DATABASE = './database/test.db'
 UPLOAD_FOLDER = './temp/'
+
+PLUGIN_PATH= './plugins'

@@ -80,6 +80,7 @@ class Plugin((db.Model)):
     name                 = db.Column(db.Unicode(100))    
     description          = db.Column(db.Unicode(500))
     author               = db.Column(db.Unicode(500))
-    url               = db.Column(db.Unicode(500))
+    url                  = db.Column(db.Unicode(500))
     image_url            = db.Column(db.Unicode(500))
     status               = db.Column(db.Integer)
+    class_name           = db.Column(db.Unicode(500))

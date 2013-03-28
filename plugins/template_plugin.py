@@ -1,18 +1,14 @@
-from plugins import template_plugin
+from models import * 
 
-class SimpleBargraph(template_plugin.TemplatePlugin):
-
-    plugin_key="simple_bargraph"
+class TemplatePlugin:
     def __init__(self):
-        template_plugin.__init__(self)
-
+        pass
 
     def initialize():
         pass
 
     def install():
         pass
-
     #checks all the dependency, if no dependency then allows to uninstall    
     def uninstall():
         pass

@@ -4,7 +4,7 @@ import re
 import csv
 from datetime import datetime
 from markdown import Markdown
-
+from flask import Blueprint, render_template, jsonify
 from flask import render_template, redirect, request, g, url_for, Markup, abort, flash, escape
 
 from app import app
@@ -17,16 +17,11 @@ from models import *
 from forms import *
 from sqlalchemy.orm import join
 
-@app.route('/favicon.ico')
-def favicon():
-    return url_for('static', filename='img/favicon.ico')
-
-@app.route('/')
-def index():
-    return render_template('home.html',home_tab="active")
+mod = Blueprint('community', __name__, url_prefix='/community')
 
 
-@app.route('/create/data_table/', methods=['GET', 'POST'])
+
+@mod.route('/create/data_table/', methods=['GET', 'POST'])
 def uploadDataTable():
     if request.method == 'GET':
         data_source_id = int(request.args.get('data_source_id', ''))       
@@ -73,12 +68,12 @@ def uploadDataTable():
         #3. Forward to validate data page with data_table_id
         return redirect(url_for('validateDataTable', data_table_id=data_table_id), code=303)
 
-@app.route('/update/data_table/<data_table_id>', methods=['GET', 'POST'])
+@mod.route('/update/data_table/<data_table_id>', methods=['GET', 'POST'])
 def updateDataTable(data_table_id):
     if request.method == 'GET':
         tables = DataTable.query.filter_by(data_table_id=data_table_id)
         for data_table in tables:
-            return render_template('update_data_table.html', title="Update",Caption="Update data set",notes="Upload a new data set", data_table = data_table, data_source_id=data_table.data_table_data_source_id)
+            return render_template('community/update_data_table.html', title="Update",Caption="Update data set",notes="Upload a new data set", data_table = data_table, data_source_id=data_table.data_table_data_source_id)
     
     if request.method == 'POST':
         name = request.form["name"]
@@ -122,7 +117,7 @@ def updateDataTable(data_table_id):
         return redirect(url_for('validateDataTable', data_table_id=data_table_id), code=303)
 
 
-@app.route('/validate/data_table/<data_table_id>', methods=['GET', 'POST'])
+@mod.route('/validate/data_table/<data_table_id>', methods=['GET', 'POST'])
 def validateDataTable(data_table_id):
     if request.method == 'GET':
         tables = DataTable.query.filter_by(data_table_id=data_table_id)
@@ -143,7 +138,7 @@ def validateDataTable(data_table_id):
                     #break after first row. No need to got further
                     break
             #depending on data_table.data_table_upload_complete make it only readable
-            return render_template('validate_data_table.html', title="Validation",Caption="Upload a new data set",notes="Select the validation format for each column. This is used for validating the csv columns uploaded by you.",columns=columns,column_list=column_list, data_table=data_table)
+            return render_template('community/validate_data_table.html', title="Validation",Caption="Upload a new data set",notes="Select the validation format for each column. This is used for validating the csv columns uploaded by you.",columns=columns,column_list=column_list, data_table=data_table)
                 
     ####         ####
     ####  POST   ####
@@ -217,7 +212,7 @@ def validateDataTable(data_table_id):
         return redirect(url_for('viewDataTable', data_table_id=data_table_id), code=303)
 
 
-@app.route('/view/data_table/<data_table_id>', methods=['GET'])
+@mod.route('/view/data_table/<data_table_id>', methods=['GET'])
 def viewDataTable(data_table_id):
     #1. get data_table
     data_table = DataTable.query.filter_by(data_table_id=data_table_id).first()
@@ -245,21 +240,21 @@ def viewDataTable(data_table_id):
 
 
 
-    return render_template('view_data_table.html',title=title, caption=caption, notes=notes, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,explore_tab="active",data_table_id=data_table_id,tags=tags)
+    return render_template('community/view_data_table.html',title=title, caption=caption, notes=notes, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,explore_tab="active",data_table_id=data_table_id,tags=tags)
 
-@app.route('/create/data_source', methods=['GET', 'POST'])
+@mod.route('/create/data_source', methods=['GET', 'POST'])
 def createDataSource():
     #TODO:3
     #for adding new data source
-    return render_template('create_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
+    return render_template('community/create_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
 
-@app.route('/update/data_source', methods=['GET', 'POST'])
+@mod.route('/update/data_source', methods=['GET', 'POST'])
 def updateDataSource():
     #TODO:4
     #update the details of data source
-    return render_template('update_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
+    return render_template('community/update_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
 
-@app.route('/view/data_source/<data_source_id>', methods=['GET'])
+@mod.route('/view/data_source/<data_source_id>', methods=['GET'])
 def viewDataSource(data_source_id):
     #TODO:2
     data_source = DataSource.query.filter_by(data_source_id=data_source_id).first()    
@@ -271,9 +266,9 @@ def viewDataSource(data_source_id):
 
     #button to add a new table - if its yours
 
-    return render_template('view_data_source.html',title=data_source.data_source_name,caption="",notes="You can add data tables to this source or edit the information related to this source.",explore_tab="active",data_source=data_source,data_owner=data_owner,data_tables=data_tables)
+    return render_template('community/view_data_source.html',title=data_source.data_source_name,caption="",notes="You can add data tables to this source or edit the information related to this source.",explore_tab="active",data_source=data_source,data_owner=data_owner,data_tables=data_tables)
 
-@app.route('/list/data_source/', methods=['GET'])
+@mod.route('/list/data_source/', methods=['GET'])
 def listAllDataSource():
     #TODO:1
     #list all the data sources
@@ -285,12 +280,12 @@ def listAllDataSource():
     #For yours - button to add a new data table to that source
 
     #button to add a new data source
-    return render_template('list_all_data_source.html',title="Data Sources",caption="All your data sources.",notes="Upload a new data table either by creating a new data source or by adding to an existing data source",explore_tab="active",data_source_all=data_source_all)
+    return render_template('community/list_all_data_source.html',title="Data Sources",caption="All your data sources.",notes="Upload a new data table either by creating a new data source or by adding to an existing data source",explore_tab="active",data_source_all=data_source_all)
 
-@app.route('/list/visualizations/', methods=['GET'])
+@mod.route('/list/visualizations/', methods=['GET'])
 def listVisualizations():
     #get the list of all the available visualizations from plugin table
-    #plugin_visualizations_all = Plugin.query.filter_by(plugin_type=1, status=1)
+    #TODO: plugin_visualizations_all = Plugin.query.filter_by(plugin_type=1, status=1)
     plugin_visualizations_all = Plugin.query.filter_by().all()
     data_table_id = request.args.get('data_table_id', '')
     if data_table_id != "":
@@ -299,13 +294,13 @@ def listVisualizations():
         data_table_id = 0
     print data_table_id
     #pass the returned value to template for display 
-    return render_template('list_visualizations.html',title="List of Available Visualization",caption="",notes="List of Available Visualization. Please select one to continue",explore_tab="active",plugin_visualizations_all=plugin_visualizations_all,data_table_id=data_table_id)
+    return render_template('community/list_visualizations.html',title="List of Available Visualization",caption="",notes="List of Available Visualization. Please select one to continue",explore_tab="active",plugin_visualizations_all=plugin_visualizations_all,data_table_id=data_table_id)
 
 
-@app.route('/create/visualizations/<plugin_key>/', methods=['GET'])
+@mod.route('/create/visualizations/<plugin_key>/', methods=['GET'])
 def createVisualizations(plugin_key):
     #get the list of all the available visualizations from plugin table
-    #plugin_visualizations_all = Plugin.query.filter_by(plugin_type=1, status=1)
+    #TODO: plugin_visualizations_all = Plugin.query.filter_by(plugin_type=1, status=1)
     visual_plugin = Plugin.query.filter_by(plugin_key=plugin_key).first()
 
     data_table_id = request.args.get('data_table_id', '')
@@ -316,14 +311,14 @@ def createVisualizations(plugin_key):
     print data_table_id
 
     #pass the returned value to template for display 
-    return render_template('create_visualizations.html',title=visual_plugin.name,caption="",notes="Please select the columns and click create.",explore_tab="active",visual_plugin=visual_plugin)
+    return render_template('community/create_visualizations.html',title=visual_plugin.name,caption="",notes="Please select the columns and click create.",explore_tab="active",visual_plugin=visual_plugin)
 
 
-@app.route('/view/visualization/<visualization_id>', methods=['GET'])
+@mod.route('/view/visualization/<visualization_id>', methods=['GET'])
 def viewVisualization(visualization_id):
     #get the visualization details using visualization_id
     #get the data table name
-    #pass the data table id and matched_colums and call the plugin.visualize()
+    #TODO: pass the data table id and matched_colums and call the plugin.visualize()
     plugin_key="choropleth_blr_ward"
     visual_plugin = Plugin.query.filter_by(plugin_key=plugin_key).first()
 
@@ -355,4 +350,4 @@ def viewVisualization(visualization_id):
 
     content = ""
     #pass the returned value to template for display 
-    return render_template('view_visualization.html',title="Gender Ratio",caption="",notes="Visualization of Gender Ration created using data from Bangalore BBMP 2010 Results.",explore_tab="active",visualization_content=content,visual_plugin=visual_plugin, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,data_table_id=data_table_id,tags=tags)
+    return render_template('community/view_visualization.html',title="Gender Ratio",caption="",notes="Visualization of Gender Ration created using data from Bangalore BBMP 2010 Results.",explore_tab="active",visualization_content=content,visual_plugin=visual_plugin, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,data_table_id=data_table_id,tags=tags)
