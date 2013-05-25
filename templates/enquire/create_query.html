@@ -8,71 +8,7 @@
     <script type="text/javascript" language="javascript" src="/static/datatable/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" language="javascript" src="/static/datatable/js/DT_bootstrap.js"></script>
 
-    <script>
-
-// Some of the Knockout examples use this data
-var sampleProductCategories = [
-  {
-    "datatable": [
-      {
-        "name": "1948 Porsche 356-A Roadster",
-        "price": 53.9
-      },
-      {
-        "name": "1948 Porsche Type 356 Roadster",
-        "price": 62.16
-      },
-      {
-        "name": "1949 Jaguar XK 120",
-        "price": 47.25
-      },
-      {
-        "name": "1952 Alpine Renault 1300",
-        "price": 98.58
-      },
-      {
-        "name": "1952 Citroen-15CV",
-        "price": 72.82
-      },
-      {
-        "name": "1956 Porsche 356A Coupe",
-        "price": 98.3
-      }
-      ],
-    "name": "Classic Cars"
-  },
-  { "datatable":[
-
-    {
-        "name": "1948 Porsche 356-A Roadster",
-        "price": 53.9
-      },
-      {
-        "name": "1948 Porsche Type 356 Roadster",
-        "price": 62.16
-      },
-      {
-        "name": "1949 Jaguar XK 120",
-        "price": 47.25
-      },
-      {
-        "name": "1952 Alpine Renault 1300",
-        "price": 98.58
-      },
-      {
-        "name": "1952 Citroen-15CV",
-        "price": 72.82
-      },
-      {
-        "name": "1956 Porsche 356A Coupe",
-        "price": 98.3
-      }
-      ],
-    "name": "Classic Cars2"
-  }
-
-];
-    </script>
+    <script type="text/javascript" language="javascript" src="/enquire/getDataSourceDataTable/"></script>
 {% endblock %}
 {% block content %}
 <div class="data_source">
@@ -91,7 +27,7 @@ var sampleProductCategories = [
         <tbody data-bind='foreach: lines'>
             <tr>
                 <td >
-                    <select data-bind='options: sampleProductCategories, optionsText: "name", optionsCaption: "Select...", value: datasource'> </select>
+                    <select data-bind='options: DataSourceDataTable, optionsText: "name", optionsCaption: "Select...", value: datasource'> </select>
                 </td>
                 <td  data-bind="with: datasource">
                     <select data-bind='options: datatable, optionsText: "name", optionsCaption: "Select...", value: $parent.datatable'> </select>
@@ -104,6 +40,9 @@ var sampleProductCategories = [
     </table>
     <button class="btn btn-primary" data-bind='click: addLine'>Add Data Table</button>
     <button class="btn btn-success" data-bind='click: save'>Continue</button>
+    <form class="form-horizontal" enctype="multipart/form-data" name="create_query" method="post">
+        <input type="hidden" value="" name="selectedTables" id="selectedTables" />
+    </form>
     </center>
 
 <script>
@@ -131,10 +70,12 @@ var Data = function() {
     self.save = function() {
         var dataToSave = $.map(self.lines(), function(line) {
             return line.datatable() ? {
-                datatable: line.datatable().name
+                datatable: line.datatable().id
             } : undefined
         });
-        alert("Could now send this to server: " + JSON.stringify(dataToSave));
+        document.getElementById('selectedTables').value=(JSON.stringify(dataToSave));
+        document.forms["create_query"].submit();
+        //alert("Could now send this to server: " + JSON.stringify(dataToSave));
     };
 };
  
