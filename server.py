@@ -17,6 +17,7 @@ import plugins
 from views import generic
 from views import admin
 from views import community
+from views import enquire
 
 
 log_file_handler = logging.FileHandler(app.config['LOGFILE'])
@@ -29,4 +30,5 @@ if __name__ == '__main__':
     models.db.create_all()
     app.register_blueprint(admin.mod)
     app.register_blueprint(community.mod)
+    app.register_blueprint(enquire.mod)
     app.run('0.0.0.0', port=5000, debug=True)

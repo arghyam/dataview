@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link href="/static/datatable/css/DT_bootstrap.css" rel="stylesheet">
+
+    <script type="text/javascript" language="javascript" src="/static/js/knockout-2.2.0.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/datatable/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/datatable/js/DT_bootstrap.js"></script>
+
+    <script>
+
+// Some of the Knockout examples use this data
+var sampleProductCategories = [
+  {
+    "datatable": [
+      {
+        "name": "1948 Porsche 356-A Roadster",
+        "price": 53.9
+      },
+      {
+        "name": "1948 Porsche Type 356 Roadster",
+        "price": 62.16
+      },
+      {
+        "name": "1949 Jaguar XK 120",
+        "price": 47.25
+      },
+      {
+        "name": "1952 Alpine Renault 1300",
+        "price": 98.58
+      },
+      {
+        "name": "1952 Citroen-15CV",
+        "price": 72.82
+      },
+      {
+        "name": "1956 Porsche 356A Coupe",
+        "price": 98.3
+      }
+      ],
+    "name": "Classic Cars"
+  },
+  { "datatable":[
+
+    {
+        "name": "1948 Porsche 356-A Roadster",
+        "price": 53.9
+      },
+      {
+        "name": "1948 Porsche Type 356 Roadster",
+        "price": 62.16
+      },
+      {
+        "name": "1949 Jaguar XK 120",
+        "price": 47.25
+      },
+      {
+        "name": "1952 Alpine Renault 1300",
+        "price": 98.58
+      },
+      {
+        "name": "1952 Citroen-15CV",
+        "price": 72.82
+      },
+      {
+        "name": "1956 Porsche 356A Coupe",
+        "price": 98.3
+      }
+      ],
+    "name": "Classic Cars2"
+  }
+
+];
+    </script>
+{% endblock %}
+{% block content %}
+<div class="data_source">
+  <div class="span12">
+   
+
+    <center>
+    <table width='60%'  class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="30%">Data Source</th>
+                <th width="30%">Data Table</th>
+                <th width="30%">Remove</th>
+            </tr>
+        </thead>
+        <tbody data-bind='foreach: lines'>
+            <tr>
+                <td >
+                    <select data-bind='options: sampleProductCategories, optionsText: "name", optionsCaption: "Select...", value: datasource'> </select>
+                </td>
+                <td  data-bind="with: datasource">
+                    <select data-bind='options: datatable, optionsText: "name", optionsCaption: "Select...", value: $parent.datatable'> </select>
+                </td>
+                <td>
+                    <a href='#' data-bind='click: $parent.removeLine'>Remove</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-primary" data-bind='click: addLine'>Add Data Table</button>
+    <button class="btn btn-success" data-bind='click: save'>Continue</button>
+    </center>
+
+<script>
+
+ 
+var DataLine = function() {
+    var self = this;
+    self.datasource = ko.observable();
+    self.datatable = ko.observable();
+ 
+    // Whenever the datasource changes, reset the datatable selection
+    self.datasource.subscribe(function() {
+        self.datatable(undefined);
+    });
+};
+ 
+var Data = function() {
+    // Stores an array of lines, and from these, can work out the grandTotal
+    var self = this;
+    self.lines = ko.observableArray([new DataLine()]); // Put one line in by default
+
+    // Operations
+    self.addLine = function() { self.lines.push(new DataLine()) };
+    self.removeLine = function(line) { self.lines.remove(line) };
+    self.save = function() {
+        var dataToSave = $.map(self.lines(), function(line) {
+            return line.datatable() ? {
+                datatable: line.datatable().name
+            } : undefined
+        });
+        alert("Could now send this to server: " + JSON.stringify(dataToSave));
+    };
+};
+ 
+ko.applyBindings(new Data());
+</script>
+
+
+</div>
+</div>
+{% endblock %}    
