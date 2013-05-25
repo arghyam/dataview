@@ -42,7 +42,11 @@
                      {{ columns[col] }}
                     </td> 
                     <td>
-                        Validate
+                        <select name="validation">
+                        {% for validate in validations %}
+                        <option val="{{ validate['validation_id'] }}">{{ validate['validation_name'] }}</option>
+                        {% endfor %}
+                        </select>
                     </td>          
                 </tr>     
             {% endfor %}    
@@ -59,7 +63,7 @@
  </div>
  <script>
 $('#previous').on('click', function (e) {
-    window.location.href='/update/data_table/{{data_table.data_table_id}}';
+    window.location.href='/community/update/data_table/{{data_table.data_table_id}}';
 });
 </script>
 

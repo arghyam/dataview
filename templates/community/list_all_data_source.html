@@ -23,7 +23,7 @@
             <tr>
 
                     <td>
-                        <a href="/view/data_source/{{data_source.data_source_id}}">{{ data_source.data_source_name }}</a>
+                        <a href="/community/view/data_source/{{data_source.data_source_id}}">{{ data_source.data_source_name }}</a>
                     </td>
                     <td>
                        Contact
@@ -45,7 +45,7 @@
 
                         <script>
                         $("#add_data_set_{{data_source.data_source_id}}").click(function() {
-                          window.location.href="/create/data_table/?data_source_id={{data_source.data_source_id}}";
+                          window.location.href="/community/create/data_table/?data_source_id={{data_source.data_source_id}}";
                         });
                         </script>
 
@@ -60,7 +60,7 @@
 <button id="create_data_source" class="btn btn-primary">Create a new Data Source</button>
 <script>
 $("#create_data_source").click(function() {
-  window.location.href="/create/data_source";
+  window.location.href="/community/create/data_source";
 });
 </script>
 </div>

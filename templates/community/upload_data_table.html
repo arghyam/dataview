@@ -35,9 +35,21 @@
     <input type="text" id="tags" name="tags" placeholder="Comma seaparated tags"/>
      </div>
     </div>     
+
+    <div class="control-group">
+     <label class="control-label" for="tags">File Type</label>
+     <div class="controls">
+    <select id="file_type" name="file_type" />
+    <option>Comma separated values</option>
+    <option>Tab separated values</option>
+    <option>Pipe separated values</option>
+    <option>SQL File</option>
+    </select>
+     </div>
+    </div>    
      
     <div class="control-group">
-     <label class="control-label" for="description">CSV File</label>
+     <label class="control-label" for="description">File</label>
      <div class="controls">
       <input type="file" id="uploaded_csv_file" name="uploaded_csv_file" />
      </div>

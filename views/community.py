@@ -13,6 +13,7 @@ import utils
 from models import Tag
 from models import TagMap
 from models import Plugin
+from models import DataValidation
 from models import * 
 from forms import *
 from sqlalchemy.orm import join
@@ -27,7 +28,7 @@ def uploadDataTable():
         data_source_id = int(request.args.get('data_source_id', ''))       
         sources = DataSource.query.filter_by(data_source_id=data_source_id)
         for data_source in sources:
-            return render_template('upload_data_table.html', title="Upload",Caption="Upload a new data set",notes="Upload a new data set", data_source=data_source,data_source_id=data_source_id)
+            return render_template('community/upload_data_table.html', title="Upload",Caption="Upload a new data set",notes="Upload a new data set", data_source=data_source,data_source_id=data_source_id)
     if request.method == 'POST':
         name = request.form["name"]
         description = request.form["description"]
@@ -66,7 +67,7 @@ def uploadDataTable():
         uploaded_csv_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         #3. Forward to validate data page with data_table_id
-        return redirect(url_for('validateDataTable', data_table_id=data_table_id), code=303)
+        return redirect(url_for('community.validateDataTable', data_table_id=data_table_id), code=303)
 
 @mod.route('/update/data_table/<data_table_id>', methods=['GET', 'POST'])
 def updateDataTable(data_table_id):
@@ -114,7 +115,7 @@ def updateDataTable(data_table_id):
 
 
         #4. Forward to validate data page with data_table_id
-        return redirect(url_for('validateDataTable', data_table_id=data_table_id), code=303)
+        return redirect(url_for('community.validateDataTable', data_table_id=data_table_id), code=303)
 
 
 @mod.route('/validate/data_table/<data_table_id>', methods=['GET', 'POST'])
@@ -137,8 +138,10 @@ def validateDataTable(data_table_id):
                         column_list.append(key)
                     #break after first row. No need to got further
                     break
-            #depending on data_table.data_table_upload_complete make it only readable
-            return render_template('community/validate_data_table.html', title="Validation",Caption="Upload a new data set",notes="Select the validation format for each column. This is used for validating the csv columns uploaded by you.",columns=columns,column_list=column_list, data_table=data_table)
+        validations = DataValidation.query.filter_by().all()
+
+        #depending on data_table.data_table_upload_complete make it only readable
+        return render_template('community/validate_data_table.html', title="Validation",Caption="Upload a new data set",notes="Select the validation format for each column. This is used for validating the csv columns uploaded by you.",columns=columns,column_list=column_list, data_table=data_table,validations=validations)
                 
     ####         ####
     ####  POST   ####
@@ -209,7 +212,7 @@ def validateDataTable(data_table_id):
 
         #4: Forward to view data_table
         print "Its complete"
-        return redirect(url_for('viewDataTable', data_table_id=data_table_id), code=303)
+        return redirect(url_for('community.viewDataTable', data_table_id=data_table_id), code=303)
 
 
 @mod.route('/view/data_table/<data_table_id>', methods=['GET'])

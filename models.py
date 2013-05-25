@@ -71,6 +71,12 @@ class TagMap((db.Model)):
     tag_id                   = db.Column(db.Integer, db.ForeignKey('tag.tag_id'), nullable=False)
 
 
+class DataValidation(db.Model):
+    __tablename__ = 'data_validation'
+    validation_id                   = db.Column(db.Integer, primary_key=True)        
+    validation_name                 = db.Column(db.Unicode(500))
+
+
 class Plugin((db.Model)):
     __tablename__ = 'plugin'
     plugin_id            = db.Column(db.Integer, primary_key=True)
