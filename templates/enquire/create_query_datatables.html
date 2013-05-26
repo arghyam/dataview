@@ -21,36 +21,36 @@
     <table width='100%'  class="table table-bordered">
         <thead>
             <tr>
-                <th >Data Source</th>
                 <th >Data Table</th>
+                <th >Data Column</th>
                 <th >Operator</th>
-                <th >Data Source</th>
                 <th >Data Table</th>
+                <th >Data Column</th>
                 <th >Remove</th>
             </tr>
         </thead>
         <tbody data-bind='foreach: lines'>
             <tr>
                 <td >
-                    <select style="width:100px !important;" data-bind='options: selectedDataTables, optionsText: "name", optionsCaption: "Select...", value: datasource'> </select>
+                    <select style="width:100px !important;" data-bind='options: selectedDataTables, optionsText: "name", optionsCaption: "Select...", value: datatable1'> </select>
                 </td>
-                <td  data-bind="with: datasource">
-                    <select style="width:100px !important;" data-bind='options: datatable, optionsText: "name", optionsCaption: "Select...", value: $parent.datatable'> </select>
+                <td  data-bind="with: datatable1">
+                    <select style="width:100px !important;" data-bind='options: datatable, optionsText: "name", optionsCaption: "Select...", value: $parent.datacolumn1'> </select>
                 </td>
                 <td>
-                    <select style="width:100px !important;">
-                        <option> Equals </option>
-                        <option> Greater </option>
-                        <option> Less </option>
-                        <option> Contains </option>
+                    <select data-bind="value: operation" style="width:100px !important;">
+                        <option value="equals"> Equals </option>
+                        <option value="greater"> Greater </option>
+                        <option value="less"> Less </option>
+                        <option values="contains"> Contains </option>
                     </select>
 
                 </td>
                 <td >
-                    <select style="width:100px !important;" data-bind='options: selectedDataTables, optionsText: "name", optionsCaption: "Select...", value: datasource'> </select>
+                    <select style="width:100px !important;" data-bind='options: selectedDataTables, optionsText: "name", optionsCaption: "Select...", value: datatable2'> </select>
                 </td>
-                <td  data-bind="with: datasource">
-                    <select style="width:100px !important;" data-bind='options: datatable, optionsText: "name", optionsCaption: "Select...", value: $parent.datatable'> </select>
+                <td  data-bind="with: datatable2">
+                    <select style="width:100px !important;" data-bind='options: datatable, optionsText: "name", optionsCaption: "Select...", value: $parent.datacolumn2'> </select>
                 </td>
                 <td>
                     <a href='#' data-bind='click: $parent.removeLine'>Remove</a>
@@ -71,13 +71,19 @@
  
 var DataLine = function() {
     var self = this;
-    self.datasource = ko.observable();
-    self.datatable = ko.observable();
- 
+    self.datatable1 = ko.observable();
+    self.datacolumn1 = ko.observable();
+    self.datatable2 = ko.observable();
+    self.datacolumn2 = ko.observable();
+    self.operation = ko.observable();
     // Whenever the datasource changes, reset the datatable selection
-    self.datasource.subscribe(function() {
-        self.datatable(undefined);
+    self.datatable1.subscribe(function() {
+        self.datacolumn1(undefined);
     });
+    self.datatable2.subscribe(function() {
+        self.datacolumn2(undefined);
+    });
+
 };
  
 var Data = function() {
@@ -90,12 +96,21 @@ var Data = function() {
     self.removeLine = function(line) { self.lines.remove(line) };
     self.save = function() {
         var dataToSave = $.map(self.lines(), function(line) {
-            return line.datatable() ? {
-                datatable: line.datatable().id
-            } : undefined
+
+            if (line.datatable1() && line.datatable2() ){
+                return { 
+                        datatable_id1: line.datatable1().id,
+                        datatable_column1: line.datacolumn1().id,
+                        operation:line.operation(),
+                        datatable_id2: line.datatable2().id,
+                        datatable_column2: line.datacolumn2().id
+                        };
+            } 
+            return x
         });
-        document.getElementById('selectedTables').value=(JSON.stringify(dataToSave));
-        document.forms["create_query"].submit();
+        alert(JSON.stringify(dataToSave));
+        //document.getElementById('selectedTables').value=(JSON.stringify(dataToSave));
+        //document.forms["create_query"].submit();
         //alert("Could now send this to server: " + JSON.stringify(dataToSave));
     };
 };

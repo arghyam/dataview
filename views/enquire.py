@@ -89,9 +89,5 @@ def getDataTables():
                     datacolumns.append({"name":data_column.data_column_name,"id":data_column.data_column_id,"type":"type"})
                 datatable["datatable"]=datacolumns             
                 selectedDataTables.append(datatable)
-
-
-
-        json_value= "var selectedDataTables = "+json.dumps(selectedDataTables)+" ;"
-        # return json_value
-        return json_value
+        json_value1= "var selectedDataTables = "+json.dumps(selectedDataTables)+" ;"
+        return json_value1
