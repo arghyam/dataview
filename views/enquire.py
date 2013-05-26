@@ -39,7 +39,7 @@ def createQuery():
             for datatable in list_data_tables:
                 datatable_id = datatable['datatable']
                 csv_datatable_id = str(datatable_id)+'+'+csv_datatable_id
-            return render_template('enquire/create_query_datatables.html', title="Enquire",Caption="Query DB",notes="Select Data Tables to build a query")
+            return render_template('enquire/create_query_datatables.html', title="Enquire",Caption="Query DB",notes="Select Data Tables to build a query",csv_datatable_id=csv_datatable_id)
         if querystep == "two":
             slectedTables = request.form["selectedTables"]
             list_data_tables=json.loads(slectedTables)
@@ -68,4 +68,30 @@ def getDataSourceDataTable():
             data_source_dict['datatable']=data_source_tables
             DataSourceDataTable.append(data_source_dict)
             json_value= "var DataSourceDataTable = "+json.dumps(DataSourceDataTable)+" ;"
+        return json_value
+
+
+@mod.route('/getDataTables/', methods=['GET'])
+def getDataTables():
+    if request.method == 'GET':
+        datatable_ids = request.args.get('datatable_ids', '')
+        datatable_ids_array = datatable_ids.split(' ')
+        selectedDataTables = []
+        for datatable_id in datatable_ids_array:
+            if datatable_id != "":
+                datatable = {}            
+                DBDataTable = DataTable.query.filter_by(data_table_id=int(datatable_id)).first()
+                datatable['name']=DBDataTable.data_table_name
+                datatable['id']=DBDataTable.data_table_id
+                datacolumns = []
+                data_columns = DataColumn.query.filter_by(data_column_data_table_id=int(datatable_id)).all()
+                for data_column in data_columns:
+                    datacolumns.append({"name":data_column.data_column_name,"id":data_column.data_column_id,"type":"type"})
+                datatable["datatable"]=datacolumns             
+                selectedDataTables.append(datatable)
+
+
+
+        json_value= "var selectedDataTables = "+json.dumps(selectedDataTables)+" ;"
+        # return json_value
         return json_value

@@ -6,45 +6,10 @@
 
     <script type="text/javascript" language="javascript" src="/static/js/knockout-2.2.0.js"></script>
     <script type="text/javascript" language="javascript" src="/static/datatable/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" language="javascript" src="/static/datatable/js/DT_bootstrap.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/datatable/js/DT_bootstrap.js">
+    </script>
 
-    <script type="text/javascript" language="javascript" >
-var selectedDataTables = [ { "datatable" : [ 
-        { "id" : 16,
-          "name" : "col1",
-          "type" :"integer"
-        },
-        { "id" : 17,
-          "name" : "col2",
-          "type" :"string"
-        }
-      ],
-    "name" : "Tabl1",
-    "id" : "TableName_id1"
-  },
-  { "datatable" : [ { "id" : 20,
-          "name" : "Bangalore BBMP 2010 Results"
-        },
-        { "id" : 21,
-          "name" : "aslk",
-          "type":"str"
-        },
-        { "id" : 22,
-          "name" : "sljdal",
-          "type":"str"
-
-        },
-        { "id" : 23,
-          "name" : "askj",
-          "type":"str"          
-        }
-      ],
-    "name" : "Table2",
-    "id" : "TableName_id2"
-  }
-];
-
-
+    <script type="text/javascript" language="javascript" src="/enquire/getDataTables?datatable_ids={{ csv_datatable_id }}">
     </script>
 {% endblock %}
 {% block content %}
