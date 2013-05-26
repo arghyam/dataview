@@ -30,15 +30,24 @@ def createQuery():
         #data required for it is got from the JSON get call getDataSourceDataTable
         return render_template('enquire/create_query.html', title="Enquire",Caption="Query DB",notes="Select Data Tables to build a query")
     if request.method == 'POST':
-        slectedTables = request.form["selectedTables"]
-        list_data_tables=json.loads(slectedTables)
-        csv_datatable_id =""
-        for datatable in list_data_tables:
-            datatable_id = datatable['datatable']
-            csv_datatable_id = str(datatable_id)+'+'+csv_datatable_id
-        return csv_datatable_id
-        return render_template('enquire/create_query_datatables.html', title="Enquire",Caption="Query DB",notes="Select Data Tables to build a query")
-
+        querystep = request.form["querystep"]
+        print querystep
+        if querystep == "one":
+            slectedTables = request.form["selectedTables"]
+            list_data_tables=json.loads(slectedTables)
+            csv_datatable_id =""
+            for datatable in list_data_tables:
+                datatable_id = datatable['datatable']
+                csv_datatable_id = str(datatable_id)+'+'+csv_datatable_id
+            return render_template('enquire/create_query_datatables.html', title="Enquire",Caption="Query DB",notes="Select Data Tables to build a query")
+        if querystep == "two":
+            slectedTables = request.form["selectedTables"]
+            list_data_tables=json.loads(slectedTables)
+            csv_datatable_id =""
+            for datatable in list_data_tables:
+                datatable_id = datatable['datatable']
+                csv_datatable_id = str(datatable_id)+'+'+csv_datatable_id
+            return csv_datatable_id
 
 
 

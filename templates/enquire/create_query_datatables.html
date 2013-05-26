@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link href="/static/datatable/css/DT_bootstrap.css" rel="stylesheet">
+
+    <script type="text/javascript" language="javascript" src="/static/js/knockout-2.2.0.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/datatable/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/static/datatable/js/DT_bootstrap.js"></script>
+
+    <script type="text/javascript" language="javascript" >
+var selectedDataTables = [ { "datatable" : [ 
+        { "id" : 16,
+          "name" : "col1",
+          "type" :"integer"
+        },
+        { "id" : 17,
+          "name" : "col2",
+          "type" :"string"
+        }
+      ],
+    "name" : "Tabl1",
+    "id" : "TableName_id1"
+  },
+  { "datatable" : [ { "id" : 20,
+          "name" : "Bangalore BBMP 2010 Results"
+        },
+        { "id" : 21,
+          "name" : "aslk",
+          "type":"str"
+        },
+        { "id" : 22,
+          "name" : "sljdal",
+          "type":"str"
+
+        },
+        { "id" : 23,
+          "name" : "askj",
+          "type":"str"          
+        }
+      ],
+    "name" : "Table2",
+    "id" : "TableName_id2"
+  }
+];
+
+
+    </script>
+{% endblock %}
+{% block content %}
+<div class="data_source">
+  <div class="span12">
+   
+
+    <center>
+    <table width='100%'  class="table table-bordered">
+        <thead>
+            <tr>
+                <th >Data Source</th>
+                <th >Data Table</th>
+                <th >Operator</th>
+                <th >Data Source</th>
+                <th >Data Table</th>
+                <th >Remove</th>
+            </tr>
+        </thead>
+        <tbody data-bind='foreach: lines'>
+            <tr>
+                <td >
+                    <select style="width:100px !important;" data-bind='options: selectedDataTables, optionsText: "name", optionsCaption: "Select...", value: datasource'> </select>
+                </td>
+                <td  data-bind="with: datasource">
+                    <select style="width:100px !important;" data-bind='options: datatable, optionsText: "name", optionsCaption: "Select...", value: $parent.datatable'> </select>
+                </td>
+                <td>
+                    <select style="width:100px !important;">
+                        <option> Equals </option>
+                        <option> Greater </option>
+                        <option> Less </option>
+                        <option> Contains </option>
+                    </select>
+
+                </td>
+                <td >
+                    <select style="width:100px !important;" data-bind='options: selectedDataTables, optionsText: "name", optionsCaption: "Select...", value: datasource'> </select>
+                </td>
+                <td  data-bind="with: datasource">
+                    <select style="width:100px !important;" data-bind='options: datatable, optionsText: "name", optionsCaption: "Select...", value: $parent.datatable'> </select>
+                </td>
+                <td>
+                    <a href='#' data-bind='click: $parent.removeLine'>Remove</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-primary" data-bind='click: addLine'>Add Criteria</button>
+    <button class="btn btn-success" data-bind='click: save'>Run</button>
+    <form class="form-horizontal" enctype="multipart/form-data" name="create_query" method="post">
+        <input type="hidden" value="two" name="querystep" id="querystep" />
+        <input type="hidden" value="" name="selectedTables" id="selectedTables" />
+    </form>
+    </center>
+
+<script>
+
+ 
+var DataLine = function() {
+    var self = this;
+    self.datasource = ko.observable();
+    self.datatable = ko.observable();
+ 
+    // Whenever the datasource changes, reset the datatable selection
+    self.datasource.subscribe(function() {
+        self.datatable(undefined);
+    });
+};
+ 
+var Data = function() {
+    // Stores an array of lines, and from these, can work out the grandTotal
+    var self = this;
+    self.lines = ko.observableArray([new DataLine()]); // Put one line in by default
+
+    // Operations
+    self.addLine = function() { self.lines.push(new DataLine()) };
+    self.removeLine = function(line) { self.lines.remove(line) };
+    self.save = function() {
+        var dataToSave = $.map(self.lines(), function(line) {
+            return line.datatable() ? {
+                datatable: line.datatable().id
+            } : undefined
+        });
+        document.getElementById('selectedTables').value=(JSON.stringify(dataToSave));
+        document.forms["create_query"].submit();
+        //alert("Could now send this to server: " + JSON.stringify(dataToSave));
+    };
+};
+ 
+ko.applyBindings(new Data());
+</script>
+
+
+</div>
+</div>
+{% endblock %}    
