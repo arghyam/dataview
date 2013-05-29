@@ -290,14 +290,15 @@ def listVisualizations():
     #get the list of all the available visualizations from plugin table
     #TODO: plugin_visualizations_all = Plugin.query.filter_by(plugin_type=1, status=1)
     plugin_visualizations_all = Plugin.query.filter_by().all()
-    data_table_id = request.args.get('data_table_id', '')
-    if data_table_id != "":
-        data_table_id =int(data_table_id)
+    data_type = request.args.get('data_type', '')
+    data_key = request.args.get('data_key', '')
+    if data_key != "":
+        data_key =int(data_key)
     else:
-        data_table_id = 0
-    print data_table_id
+        data_key = 0
+    print data_key
     #pass the returned value to template for display 
-    return render_template('community/list_visualizations.html',title="List of Available Visualization",caption="",notes="List of Available Visualization. Please select one to continue",explore_tab="active",plugin_visualizations_all=plugin_visualizations_all,data_table_id=data_table_id)
+    return render_template('community/list_visualizations.html',title="List of Available Visualization",caption="",notes="List of Available Visualization. Please select one to continue",explore_tab="active",plugin_visualizations_all=plugin_visualizations_all,data_key=data_key,data_type=data_type)
 
 
 @mod.route('/create/visualizations/<plugin_key>/', methods=['GET'])
@@ -305,28 +306,47 @@ def createVisualizations(plugin_key):
     #get the list of all the available visualizations from plugin table
     #TODO: plugin_visualizations_all = Plugin.query.filter_by(plugin_type=1, status=1)
     visual_plugin = Plugin.query.filter_by(plugin_key=plugin_key).first()
-
-    data_table_id = request.args.get('data_table_id', '')
-    if data_table_id != "":
-        data_table_id =int(data_table_id)
+    data_type = request.args.get('data_type', '')
+    data_key = request.args.get('data_key', '')
+    if data_key != "":
+        data_key =int(data_key)
     else:
-        data_table_id = 0
-    print data_table_id
+        data_key = 0
+
+    #only for table as of now
+    data_table_id = data_key
+
+    #1. get data_table
+    data_table = DataTable.query.filter_by(data_table_id=data_table_id).first()
+    data_table_data_source_id = data_table.data_table_data_source_id
+    title=data_table.data_table_name
+    caption = data_table.data_table_description
+
+
+    #2. get data_columns
+    data_columns = DataColumn.query.filter_by(data_column_data_table_id=data_table_id)
+    no_of_data_columns = data_columns.count()
 
     #pass the returned value to template for display 
-    return render_template('community/create_visualizations.html',title=visual_plugin.name,caption="",notes="Please select the columns and click create.",explore_tab="active",visual_plugin=visual_plugin)
+    return render_template('visualization_plugins/'+visual_plugin.plugin_key+".html",title=visual_plugin.name,caption="",notes="Please select the columns and click create.",explore_tab="active",visual_plugin=visual_plugin,data_columns=data_columns, user_action="select",data_key=data_key,data_type=data_type)
 
 
-@mod.route('/view/visualization/<visualization_id>', methods=['GET'])
-def viewVisualization(visualization_id):
-    #get the visualization details using visualization_id
-    #get the data table name
-    #TODO: pass the data table id and matched_colums and call the plugin.visualize()
-    plugin_key="choropleth_blr_ward"
+@mod.route('/try/visualization/<plugin_key>', methods=['POST'])
+def tryVisualization(plugin_key):
+    print request.form 
     visual_plugin = Plugin.query.filter_by(plugin_key=plugin_key).first()
 
     ################# DATA RELATED ###########################################
-    data_table_id = 20
+    data_type = request.args.get('data_type', '')
+    data_key = request.args.get('data_key', '')
+    if data_key != "":
+        data_key =int(data_key)
+    else:
+        data_key = 0
+
+    #only for table as of now
+    data_table_id = data_key
+
     data_table = DataTable.query.filter_by(data_table_id=data_table_id).first()
     data_table_data_source_id = data_table.data_table_data_source_id
     title=data_table.data_table_name
@@ -350,7 +370,7 @@ def viewVisualization(visualization_id):
     sql="select * from values_data_table_"+str(data_table_id)
     values_data_table = models.db.session.execute(sql)
 
+       
 
-    content = ""
     #pass the returned value to template for display 
-    return render_template('community/view_visualization.html',title="Gender Ratio",caption="",notes="Visualization of Gender Ration created using data from Bangalore BBMP 2010 Results.",explore_tab="active",visualization_content=content,visual_plugin=visual_plugin, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,data_table_id=data_table_id,tags=tags)
+    return render_template('visualization_plugins/'+visual_plugin.plugin_key+".html",title=request.form['title'],caption="",notes="Please click on save to save the visualization",explore_tab="active",visual_plugin=visual_plugin, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,data_table_id=data_table_id,tags=tags,user_action="try",selected_columns=request.form)

@@ -33,3 +33,5 @@ class SimpleBargraph(template_plugin.TemplatePlugin):
     def visualize():
         pass
     
+    def getColumns();
+        return ['X Axis','Y Axis']

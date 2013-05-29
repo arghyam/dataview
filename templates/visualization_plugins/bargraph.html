@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+  <div class="span12">
+{% if user_action=="select" %}
+
+    
+            <table class="table table-bordered">
+            <tr>
+                    <td>
+                        <img src="{{ visual_plugin.image_url }}" width="250px"/>
+                    </td>
+                    <td>
+                        {{ visual_plugin.description }}
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Author
+                    </td>
+
+                    <td>
+                        {{ visual_plugin.author }}
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Website
+                    </td>
+
+                    <td>
+                        {{ visual_plugin.url }}
+                    </td>
+            </tr>
+
+            </table>
+<div class="alert alert-success">
+<button type="button" class="close" data-dismiss="alert">&times;</button>
+In order create time plot we need two values. Date value for x-axis and value for y axis. Please choose them below. <br>
+</div>
+<form class="form-horizontal" enctype="multipart/form-data" name="upload_data_table_form" method="post" action="/community/try/visualization/{{visual_plugin.plugin_key}}?data_key={{data_key}}&data_type={{data_type}}">
+<!-- This is temp. Needs complete rework -->
+      <table class="table table-bordered">
+            <tr>
+                    <td>
+                        Date Column
+                    </td>
+                    <td>
+                        <select name="date_column">
+                        {% for column in data_columns %}
+                        <option value="{{ column.data_column_id}} ">{{column.data_column_name}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Value Column
+                    </td>
+                    <td>
+                        <select name="value_column">
+                        {% for column in data_columns %}
+                        <option value="{{ column.data_column_id}} ">{{column.data_column_name}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+            </tr>
+                <tr>
+                    <td>
+                        Title
+                    </td>
+
+                    <td>
+                        <input type="text" name="title" placeholder="Title of the visualization you are creating.">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=2>
+                      <input type="hidden" value="{{data_key}}" name="data_key" />
+                      <input type="hidden" value="{{data_type}}" name="data_type">
+                        <center><button type="submit" class="btn btn-success">Create</button></center>
+                    </td>
+                </tr>                
+            </table>
+</form>
+{% endif %}
+{% if user_action=="try" %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2004',  1000,      400],
+          ['2005',  1170,      460],
+          ['2006',  660,       1120],
+          ['2007',  1030,      540]
+        ]);
+
+        var options = {
+          title: 'Company Performance',
+          vAxis: {title: 'Year',  titleTextStyle: {color: 'red'}}
+        };
+
+        var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+{{selected_columns}}
+{% endif %}
+
+</div>
+{% endblock %}

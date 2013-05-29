@@ -39,12 +39,12 @@
 <button type="button" class="close" data-dismiss="alert">&times;</button>
 In order to create Choropleth visualization, we need two inputs. The first one is the column which will give the ward number. Second input will decide the color of the ward. So please select them below. <br>
 </div>
-
-    
-            <table class="table table-bordered">
+<!-- This is temp. Needs complete rework -->
+      <table class="table table-bordered">
+        {% if visual_plugin.plugin_key == 'timeplot' %}    
             <tr>
                     <td>
-                        Ward Number
+                        Date Column
                     </td>
                     <td>
                         <select>
@@ -61,9 +61,8 @@ In order to create Choropleth visualization, we need two inputs. The first one i
             </tr>
             <tr>
                     <td>
-                        Values for Choropleth
+                        Value Column
                     </td>
-
                     <td>
                         <select>
                           <option>Ward_No</option>
@@ -74,9 +73,48 @@ In order to create Choropleth visualization, we need two inputs. The first one i
                           <option>Long</option>
                           <option>Reservation</option>
                           <option>Woman</option>
-                        </select>  
+                        </select>
                     </td>
             </tr>
+        {% endif %}
+        {% if visual_plugin.plugin_key == 'simple-bargraph' %}    
+            <table class="table table-bordered">
+            <tr>
+                    <td>
+                        X-Axis
+                    </td>
+                    <td>
+                        <select>
+                          <option>Ward_No</option>
+                          <option>Ward_Name</option>
+                          <option>AC_No</option>
+                          <option>AC_Name</option>
+                          <option>Lat</option>
+                          <option>Long</option>
+                          <option>Reservation</option>
+                          <option>Woman</option>
+                        </select>
+                    </td>
+            </tr>
+                        <tr>
+                    <td>
+                        Y-Axis
+                    </td>
+                    <td>
+                        <select>
+                          <option>Ward_No</option>
+                          <option>Ward_Name</option>
+                          <option>AC_No</option>
+                          <option>AC_Name</option>
+                          <option>Lat</option>
+                          <option>Long</option>
+                          <option>Reservation</option>
+                          <option>Woman</option>
+                        </select>
+                    </td>
+            </tr>
+        {% endif %}
+
                 <tr>
                     <td>
                         Title
