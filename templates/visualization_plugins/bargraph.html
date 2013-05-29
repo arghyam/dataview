@@ -51,7 +51,7 @@ In order create time plot we need two values. Date value for x-axis and value fo
                     <td>
                         <select name="date_column">
                         {% for column in data_columns %}
-                        <option value="{{ column.data_column_id}} ">{{column.data_column_name}}</option>
+                        <option value="{{ column.data_column_short_name}} ">{{column.data_column_name}}</option>
                         {% endfor %}
                         </select>
                     </td>
@@ -63,7 +63,7 @@ In order create time plot we need two values. Date value for x-axis and value fo
                     <td>
                         <select name="value_column">
                         {% for column in data_columns %}
-                        <option value="{{ column.data_column_id}} ">{{column.data_column_name}}</option>
+                        <option value="{{ column.data_column_short_name}} ">{{column.data_column_name}}</option>
                         {% endfor %}
                         </select>
                     </td>
@@ -94,16 +94,17 @@ In order create time plot we need two values. Date value for x-axis and value fo
       google.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Year', 'Sales', 'Expenses'],
-          ['2004',  1000,      400],
-          ['2005',  1170,      460],
-          ['2006',  660,       1120],
-          ['2007',  1030,      540]
+
+          ['Name', 'Age'],
+          ['Raj',  1000],
+          ['Thej',  1170],
+          ['Kamal',  660],
+          ['Vimal',  103]
+
         ]);
 
         var options = {
-          title: 'Company Performance',
-          vAxis: {title: 'Year',  titleTextStyle: {color: 'red'}}
+          vAxis: {title: 'Name',  titleTextStyle: {color: 'red'}}
         };
 
         var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
@@ -111,7 +112,9 @@ In order create time plot we need two values. Date value for x-axis and value fo
       }
     </script>
     <div id="chart_div" style="width: 900px; height: 500px;"></div>
+<center><button type="submit" class="btn btn-success">Save</button></center>
 {{selected_columns}}
+
 {% endif %}
 
 </div>
