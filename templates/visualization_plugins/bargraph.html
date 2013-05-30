@@ -93,18 +93,10 @@ In order create time plot we need two values. Date value for x-axis and value fo
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
-        var data = google.visualization.arrayToDataTable([
+        var data = google.visualization.arrayToDataTable(
+            {{data_array|safe}}
 
-          ['{{selected_columns.getlist("name_column")}}', '{{selected_columns.getlist("value_column")}}'],
-
-          {% for row in values_data_table %}
-          ['{{ row[selected_columns.getlist("name_column")] }}',  1000],
-          ['{{ row[selected_columns.getlist("name_column")] }}',  1170],
-          ['{{ row[selected_columns.getlist("name_column")] }}',  660],
-          ['{{ row[selected_columns.getlist("name_column")] }}',  103]
-          {% endfor %}
-
-        ]);
+            );
 
         var options = {
           vAxis: {title: 'Name',  titleTextStyle: {color: 'red'}}
@@ -116,7 +108,6 @@ In order create time plot we need two values. Date value for x-axis and value fo
     </script>
     <div id="chart_div" style="width: 900px; height: 500px;"></div>
 <center><button type="submit" class="btn btn-success">Save</button></center>
-{{selected_columns}}
 
 {% endif %}
 

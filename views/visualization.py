@@ -7,6 +7,8 @@ from markdown import Markdown
 from flask import Blueprint, render_template, jsonify
 from flask import render_template, redirect, request, g, url_for, Markup, abort, flash, escape
 
+import json
+
 from app import app
 import models
 import utils
@@ -58,8 +60,8 @@ def bargraph():
     ################# DATA RELATED ###########################################
     data_type = request.form.get('data_type', '')
     data_key = request.form.get('data_key', '')
-    name_column = request.form.get('name_column', '')
-    value_column = request.form.get('value_column', '')
+    name_column = request.form.get('name_column', '').strip()
+    value_column = request.form.get('value_column', '').strip()
 
     if data_key != "":
         data_key =int(data_key)
@@ -91,8 +93,18 @@ def bargraph():
     #4. get values_data_table_<data_table_id>
     sql="select * from values_data_table_"+str(data_table_id)
     values_data_table = models.db.session.execute(sql)
-
-       
+    data_array =[]
+    values_array = []
+    values_array.append(name_column)
+    values_array.append(value_column)
+    data_array.append(values_array)
+    for row in values_data_table:
+        values_array = []
+        print unicode(row[name_column])
+        values_array.append(unicode(row[name_column]))
+        values_array.append(int(row[value_column]))
+        data_array.append(values_array)
+    print json.dumps(data_array,ensure_ascii=False)
     #pass the returned value to template for display 
-    return render_template("visualization_plugins/bargraph.html",title=request.form['title'],caption="",notes="Please click on save to save the visualization",explore_tab="active",visual_plugin=visual_plugin, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,data_table_id=data_table_id,tags=tags,user_action="try",selected_columns=request.form)
+    return render_template("visualization_plugins/bargraph.html",title=request.form['title'],caption="",notes="Please click on save to save the visualization",explore_tab="active",visual_plugin=visual_plugin, values_data_table=values_data_table, data_table=data_table,data_source=data_source, data_columns=data_columns,no_of_data_columns=no_of_data_columns,data_owner=data_owner,data_table_id=data_table_id,tags=tags,user_action="try",selected_columns=request.form,data_array=json.dumps(data_array,ensure_ascii=False)  )
 
