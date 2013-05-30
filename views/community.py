@@ -133,7 +133,7 @@ def validateDataTable(data_table_id):
                 for row in csv_reader:  
                     for col in row:
                         seq_num = seq_num + 1
-                        key = str(seq_num)+utils.getKey(col)
+                        key = utils.getKey(col)+str(seq_num)
                         columns[key]=col
                         column_list.append(key)
                     #break after first row. No need to got further
@@ -170,7 +170,7 @@ def validateDataTable(data_table_id):
                             print str(seq_num)
                             seq_num = seq_num + 1
                             data_column_name = col
-                            data_column_short_name = str(seq_num)+utils.getKey(col)
+                            data_column_short_name = utils.getKey(col)+str(seq_num)
                             #insert into DataColumn
                             data_column = DataColumn(data_column_name=data_column_name, data_column_short_name=data_column_short_name,data_column_data_table_id=data_table_id)
                             models.db.session.add(data_column)

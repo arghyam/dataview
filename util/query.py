@@ -18,7 +18,7 @@ def getWhereClause(query_json):
         table1 = " values_data_table_"+str(row["datatable_id1"])
         column1_id = row["datatable_column1"]
         data_column1 = DataColumn.query.filter_by(data_column_id=int(column1_id)).first()
-        where_query = where_query+" '"+table1+"."+data_column1.data_column_short_name+"' "
+        where_query = where_query+" "+table1+"."+data_column1.data_column_short_name+" "
         
         operation = row["operation"]
         where_query = where_query+" "+operations[operation]+" "
@@ -28,7 +28,7 @@ def getWhereClause(query_json):
 
         column2_id = row["datatable_column2"]
         data_column2 = DataColumn.query.filter_by(data_column_id=int(column2_id)).first()
-        where_query = where_query+" '"+table2+"."+data_column2.data_column_short_name+"' "
+        where_query = where_query+" "+table2+"."+data_column2.data_column_short_name+" "
 
         where_query = where_query+"  and "
 
