@@ -19,6 +19,7 @@ from forms import *
 from sqlalchemy.orm import join
 import json
 import urllib
+from util import query
 
 mod = Blueprint('enquire', __name__, url_prefix='/enquire')
 
@@ -41,14 +42,18 @@ def createQuery():
                 csv_datatable_id = str(datatable_id)+'+'+csv_datatable_id
             return render_template('enquire/create_query_datatables.html', title="Enquire",Caption="Query DB",notes="Select Data Tables to build a query",csv_datatable_id=csv_datatable_id)
         if querystep == "two":
-            slectedTables = request.form["selectedTables"]
-            list_data_tables=json.loads(slectedTables)
-            csv_datatable_id =""
-            for datatable in list_data_tables:
-                datatable_id = datatable['datatable']
-                csv_datatable_id = str(datatable_id)+'+'+csv_datatable_id
-            return csv_datatable_id
-
+            query_text = request.form["query"]
+            query_json=json.loads(query_text)
+            result_query="select * from "
+            tables = query.getTables(query_json)
+            for key, value in tables.iteritems():
+                result_query = result_query+ " "+str(value)+" as "+str(key)+", "
+            result_query = result_query[:-2]+" where "
+            where_clause = query.getWhereClause(query_json)
+            result_query = result_query +where_clause
+            values_data_table = models.db.session.execute(result_query)
+            print result_query
+            return render_template('enquire/query_display.html', title="Enquire",Caption="Query DB",notes="Save the Query Results for future",values_data_table=values_data_table,result_query=result_query)
 
 
 

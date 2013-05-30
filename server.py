@@ -18,6 +18,7 @@ from views import generic
 from views import admin
 from views import community
 from views import enquire
+from views import visualization
 
 
 log_file_handler = logging.FileHandler(app.config['LOGFILE'])
@@ -31,4 +32,7 @@ if __name__ == '__main__':
     app.register_blueprint(admin.mod)
     app.register_blueprint(community.mod)
     app.register_blueprint(enquire.mod)
+    app.register_blueprint(visualization.mod)
+
+
     app.run('0.0.0.0', port=5000, debug=True)

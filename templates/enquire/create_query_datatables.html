@@ -62,7 +62,7 @@
     <button class="btn btn-success" data-bind='click: save'>Run</button>
     <form class="form-horizontal" enctype="multipart/form-data" name="create_query" method="post">
         <input type="hidden" value="two" name="querystep" id="querystep" />
-        <input type="hidden" value="" name="selectedTables" id="selectedTables" />
+        <input type="hidden" value="" name="query" id="query" />
     </form>
     </center>
 
@@ -109,8 +109,9 @@ var Data = function() {
             return x
         });
         alert(JSON.stringify(dataToSave));
-        //document.getElementById('selectedTables').value=(JSON.stringify(dataToSave));
-        //document.forms["create_query"].submit();
+
+        document.getElementById('query').value=(JSON.stringify(dataToSave));
+        document.forms["create_query"].submit();
         //alert("Could now send this to server: " + JSON.stringify(dataToSave));
     };
 };
