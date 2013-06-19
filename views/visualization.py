@@ -11,7 +11,7 @@ import json
 
 from app import app
 import models
-import utils
+from util import naming_utils
 from models import Tag
 from models import TagMap
 from models import Plugin

@@ -16,7 +16,7 @@ from forms import *
 import settings
 
 import plugins
-import util 
+from util import *
 from util import file_utils
 
 

@@ -8,7 +8,7 @@ from flask import render_template, redirect, request, g, url_for, Markup, abort,
 
 from app import app
 import models
-import utils
+from util import naming_utils
 from models import Tag
 from models import TagMap
 from models import Plugin

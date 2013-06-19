@@ -35,4 +35,4 @@ if __name__ == '__main__':
     app.register_blueprint(visualization.mod)
 
 
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=8080, debug=True)

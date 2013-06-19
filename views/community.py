@@ -9,7 +9,7 @@ from flask import render_template, redirect, request, g, url_for, Markup, abort,
 
 from app import app
 import models
-import utils
+from util import *
 from models import Tag
 from models import TagMap
 from models import Plugin
@@ -133,7 +133,7 @@ def validateDataTable(data_table_id):
                 for row in csv_reader:  
                     for col in row:
                         seq_num = seq_num + 1
-                        key = utils.getKey(col)+str(seq_num)
+                        key = naming_utils.getKey(col)+str(seq_num)
                         columns[key]=col
                         column_list.append(key)
                     #break after first row. No need to got further
@@ -170,7 +170,7 @@ def validateDataTable(data_table_id):
                             print str(seq_num)
                             seq_num = seq_num + 1
                             data_column_name = col
-                            data_column_short_name = utils.getKey(col)+str(seq_num)
+                            data_column_short_name = naming_utils.getKey(col)+str(seq_num)
                             #insert into DataColumn
                             data_column = DataColumn(data_column_name=data_column_name, data_column_short_name=data_column_short_name,data_column_data_table_id=data_table_id)
                             models.db.session.add(data_column)
