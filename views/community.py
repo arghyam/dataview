@@ -247,15 +247,31 @@ def viewDataTable(data_table_id):
 
 @mod.route('/create/data_source', methods=['GET', 'POST'])
 def createDataSource():
-    #TODO:3
-    #for adding new data source
-    return render_template('community/create_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
+    if request.method == 'GET':
+        #for adding new data source
+        return render_template('community/create_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
+    else:
+        name = request.form["name"]
+        org = request.form["org"]
+
+        org_address = request.form["org_address"]
+        org_phone = request.form["org_phone"]
+        org_web = request.form["org_web"]
+
+     
+        #1. insert into the data_source
+        data_source = DataSource(data_source_name=name, data_source_owner_user_id=1,data_source_organization_name=org,data_source_organization_adddress=org_address,data_source_organization_phone=org_phone,data_source_organization_web=org_web)
+        models.db.session.add(data_source)
+        models.db.session.commit()
+
+        return redirect(url_for('community.viewDataSource', data_source_id=data_source.data_source_id), code=303)
+
 
 @mod.route('/update/data_source', methods=['GET', 'POST'])
 def updateDataSource():
-    #TODO:4
-    #update the details of data source
-    return render_template('community/update_data_source.html',title="Data Source",caption="Create a new data source",notes="You dont need a new data source often. You need only one DataSource per organization. Check all the DataSources you have created until now.")
+    pass
+
+
 
 @mod.route('/view/data_source/<data_source_id>', methods=['GET'])
 def viewDataSource(data_source_id):
@@ -289,7 +305,7 @@ def listAllDataSource():
 def listVisualizations():
     #get the list of all the available visualizations from plugin table
     #TODO: plugin_visualizations_all = Plugin.query.filter_by(plugin_type=1, status=1)
-    plugin_visualizations_all = Plugin.query.filter_by().all()
+    plugin_visualizations_all = Plugin.query.filter_by(status=1).all()
     data_type = request.args.get('data_type', '')
     data_key = request.args.get('data_key', '')
     if data_key != "":

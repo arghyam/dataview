@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+{% block head %}
+    {{ super() }}
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+ <!--[if lte IE 8]>
+     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+ <![endif]-->
+<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+
+<link rel="stylesheet" href="/static/mapcluster/MarkerCluster.css" />
+<link rel="stylesheet" href="/static/mapcluster/MarkerCluster.Default.css" />
+<!--[if lte IE 8]><link rel="stylesheet" href="/static/mapcluster/MarkerCluster.Default.ie.css" /><![endif]-->
+<script src="/static/mapcluster/leaflet.markercluster-src.js"></script>
+
+{% endblock %}
+{% block content %}
+  <div class="span12">
+{% if user_action=="select" %}
+
+    
+            <table class="table table-bordered">
+            <tr>
+                    <td>
+                        <img src="{{ visual_plugin.image_url }}" width="250px"/>
+                    </td>
+                    <td>
+                        {{ visual_plugin.description }}
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Author
+                    </td>
+
+                    <td>
+                        {{ visual_plugin.author }}
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Website
+                    </td>
+
+                    <td>
+                        {{ visual_plugin.url }}
+                    </td>
+            </tr>
+
+            </table>
+<div class="alert alert-success">
+<button type="button" class="close" data-dismiss="alert">&times;</button>
+In order create map cluster we need Latitude, Longitude and Name tag. Please choose them below. <br>
+</div>
+<form class="form-horizontal" enctype="multipart/form-data" name="upload_data_table_form" method="post" action="/visualization/mapcluster?data_key={{data_key}}&data_type={{data_type}}">
+<!-- This is temp. Needs complete rework -->
+      <table class="table table-bordered">
+            <tr>
+                    <td>
+                        Latitude Column
+                    </td>
+                    <td>
+                        <select name="latitude_column">
+                        {% for column in data_columns %}
+                        <option value="{{ column.data_column_short_name}} ">{{column.data_column_name}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Longitude Column
+                    </td>
+                    <td>
+                        <select name="longitude_column">
+                        {% for column in data_columns %}
+                        <option value="{{ column.data_column_short_name}} ">{{column.data_column_name}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+            </tr>
+            <tr>
+                    <td>
+                        Name Column
+                    </td>
+                    <td>
+                        <select name="name_column">
+                        {% for column in data_columns %}
+                        <option value="{{ column.data_column_short_name}} ">{{column.data_column_name}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Title
+                </td>
+
+                <td>
+                    <input type="text" name="title" placeholder="Title of the visualization you are creating.">
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2>
+                  <input type="hidden" value="{{data_key}}" name="data_key" />
+                  <input type="hidden" value="{{data_type}}" name="data_type">
+                    <center><button type="submit" class="btn btn-success">Create</button></center>
+                </td>
+            </tr>                
+            </table>
+</form>
+{% endif %}
+{% if user_action=="try" %}
+
+<div id="map"  style="width: 900px; height: 700px;"></div>
+
+
+    <script type="text/javascript">
+    var india = L.latLng([23.200961,77.739258]);
+    var map = L.map('map').setView(india, 5);
+
+    var mapquestUrl = 'http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png',
+    subDomains = ['otile1','otile2','otile3','otile4'];
+    var mapquest = new L.TileLayer(mapquestUrl, {maxZoom: 18, subdomains: subDomains});
+    mapquest.addTo(map);
+
+    $i = 0;
+    var group_markers = new L.MarkerClusterGroup();
+            var marker = L.marker([28.628426006,77.219248338]);
+            marker.bindPopup("<b>Indian oil bhawan - 110001</b><br><img src='http://distilleryimage10.s3.amazonaws.com/9314df3674d511e2917a22000a9f1587_7.jpg' width=100px height=100px /><br><br><a href='/postbox/pb/id/389458911863846782_31979172'>Detailed Information</a>");
+            group_markers.addLayer( marker);
+            map.addLayer(group_markers);
+            
+    </script>
+
+
+
+{% endif %}
+
+</div>
+{% endblock %}

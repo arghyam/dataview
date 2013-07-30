@@ -4,7 +4,62 @@
     {{ super() }}
 {% endblock %}
 {% block content %}
+<div class="row">
+    <div class="span2">
+      <div class="well">
+        <h3>Left Menu</h3>
+      </div>
+    </div>
 
-<button class="btn btn-success">Save</button>
+  <div class="span6">
+   <form class="form-horizontal" enctype="multipart/form-data" name="upload_data_table_form" method="post">
+    <legend>Adding A new Data Source</legend>
+
+    <div class="control-group">
+     <label class="control-label" for="name">Source Name</label>
+     <div class="controls">
+    <input type="text" id="name" name="name" placeholder="Name of the Data Source"/>
+     </div>
+    </div>
+    
+    <div class="control-group">
+     <label class="control-label" for="org">Organization</label>
+     <div class="controls">
+    <input type="text" id="org" name="org" placeholder="Name of the Organization"/>
+     </div>
+    </div>
+     
+    <div class="control-group">
+     <label class="control-label" for="org_address">Address</label>
+     <div class="controls">
+    <input type="text" id="org_address" name="org_address" placeholder="Address of the organization"/>
+     </div>
+    </div>
+
+    <div class="control-group">
+     <label class="control-label" for="org_phone">Phone</label>
+     <div class="controls">
+    <input type="text" id="org_phone" name="org_phone" placeholder="Contact No of the organization"/>
+     </div>
+    </div>
+
+    <div class="control-group">
+     <label class="control-label" for="org_web">Website</label>
+     <div class="controls">
+    <input type="text" id="org_web" name="org_web" placeholder="Website"/>
+     </div>
+    </div>     
+
+     
+
+     
+    <div class="form-actions">
+     <button class="btn btn-danger">Cancel</button>
+     <button type="submit" class="btn btn-success">Create</button>
+    </div>
+   </form>
+  </div>
+ </div>
+
 
 {% endblock %}
